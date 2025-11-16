@@ -2,6 +2,7 @@
 #include "MainWindow.h"
 
 // Include the core header (test!)
+#include "Body.h"
 
 int main(int argc, char *argv[])
 {
