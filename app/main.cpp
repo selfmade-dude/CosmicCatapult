@@ -1,6 +1,8 @@
 #include <QApplication>
 #include "MainWindow.h"
 
+// Include the core header (test!)
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
