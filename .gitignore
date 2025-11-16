@@ -1,0 +1,24 @@
+# Build folders
+/build/
+/build-*/
+
+# Qt creator
+*.pro.user
+*.user
+*.user.*
+
+# CMake generated
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Visual Studio Code
+.vscode/
+
+# Windows files
+Thumbs.db
+*.pdb
+*.obj
+*.log
+*.exe
