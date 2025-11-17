@@ -14,3 +14,8 @@ inline double speedFromVelocity(const Vector2 &velocity)
 {
     return std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y)
 }
+
+inline double dot(const Vector2 &a, const Vector2 &b)
+{
+    return a.x * b.x + a.y * b.y;
+}
