@@ -60,4 +60,17 @@ inline double eccentricityFromEnergyAndAngularMomentum(double energy,
     return std::sqrt(argument);
 }            
                                                     
-                                                       
+inline double semiMajorAxisFromEnergy(double energy, double mu)
+{
+    if (mu == 0.0) 
+    {
+        return 0.0;
+    }
+
+    if (energy == 0.0)
+    {
+        return 0.0; // Parabolic case, a is formally infinite.
+    }
+
+    return -mu / (2.0 * energy);
+}                                   
