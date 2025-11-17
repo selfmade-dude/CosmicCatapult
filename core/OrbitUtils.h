@@ -17,8 +17,8 @@ inline OrbitState makeOrbitState(const Vector2 &position,
     state.velocity = velocity;
 
     // These will be computed later using physics formulas
-    state.radius = 0.0;
-    state.speed = 0.0;
+    state.radius = radiusFromPosition(position);
+    state.speed = speedFromVelocity(velocity);
     state.energy = 0.0;
     state.eccentricity = 0.0;
     state.trueAnomaly = 0.0;
