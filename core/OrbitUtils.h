@@ -1,0 +1,27 @@
+#pragma once
+
+#include "Vector2.h"
+#include "OrbitState.h"
+
+// A utility function that will compute an OrbitState from raw inputs.
+// Right now it contains only the structure (no physics calculations yet).
+
+inline OrbitState makeOrbitState(const Vector2 &position,
+                                 const Vector2 &velocity,
+                                double mu)
+{
+    OrbitState state;
+
+    // Fill raw values
+    state.position = position;
+    state.velocity = velocity;
+
+    // These will be computed later using physics formulas
+    state.radius = 0.0;
+    state.speed = 0.0;
+    state.energy = 0.0;
+    state.eccentricity = 0.0;
+    state.trueAnomaly = 0.0;
+
+    return state;
+}
