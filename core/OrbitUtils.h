@@ -19,7 +19,7 @@ inline OrbitState makeOrbitState(const Vector2 &position,
     // These will be computed later using physics formulas
     state.radius = radiusFromPosition(position);
     state.speed = speedFromVelocity(velocity);
-    state.energy = 0.0;
+    state.energy = (state.speed * state.speed) / 2.0 - mu / state.radius; // Compute specific orbital energy: ε = v²/2 − μ/r
     state.eccentricity = 0.0;
     state.trueAnomaly = 0.0;
 
