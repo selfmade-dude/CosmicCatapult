@@ -21,7 +21,11 @@ inline OrbitState makeOrbitState(const Vector2 &position,
     state.speed = speedFromVelocity(velocity);
     state.energy = (state.speed * state.speed) / 2.0 - mu / state.radius; // Compute specific orbital energy: ε = v²/2 − μ/r
     state.angularMomentum = std::abs(crossZ(position, velocity));
-    state.eccentricity = 0.0;
+    state.eccentricity = eccentricityFromEnergyAndAngularMomentum(
+        state.energy,
+        state.angularMomentum,
+        mu
+    );
     state.trueAnomaly = 0.0;
 
     return state;

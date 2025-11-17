@@ -33,7 +33,31 @@ inline double cosBetween(const Vector2 &a, const Vector2 &b) // Cosine of angle 
     return dot(a, b) / (magA * magB);
 }
 
-inline double crossZ(const Vector2 &a, const Vector2 &b)
+inline double crossZ(const Vector2 &a, const Vector2 &b) // Cross product of vectors in a plane
 {
     return a.x * b.y - a.y * b.x;
 }
+
+inline double eccentricityFromEnergyAndAngularMomentum(double energy,
+                                                       double angularMomentum,
+                                                       double mu)
+{
+    if (mu == 0.0)
+    {
+        return 0.0;
+    }
+
+    const double mu2 = mu * mu;
+    const double h2 = angularMomentum * angularMomentum;
+
+    const double argument = 1.0 + 2.0 * energy * h2 / m2;
+
+    if (argument < 0.0)
+    {
+        return 0.0; // Numeric safety
+    }
+
+    return std::sqrt(argument);
+}            
+                                                    
+                                                       
