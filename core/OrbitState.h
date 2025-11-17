@@ -13,6 +13,8 @@ struct OrbitState
     double radius = 0.0;   // |r| [m]
     double speed = 0.0;    // |v| [m/s]
 
+    double angularMomentum = 0.0; // |h| = |r × v| (z-component)
+
     double energy = 0.0;   // specific orbital energy [m^2/s^2]
 
     double eccentricity = 0.0;  // dimensionless

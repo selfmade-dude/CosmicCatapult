@@ -32,3 +32,8 @@ inline double cosBetween(const Vector2 &a, const Vector2 &b) // Cosine of angle 
 
     return dot(a, b) / (magA * magB);
 }
+
+inline double crossZ(const Vector2 &a, const Vector2 &b)
+{
+    return a.x * b.y - a.y * b.x;
+}
