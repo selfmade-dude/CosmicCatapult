@@ -23,12 +23,20 @@ inline OrbitState makeOrbitState(const Vector2 &position,
     state.angularMomentum = std::abs(crossZ(position, velocity));
 
     state.semiMajorAxis = semiMajorAxisFromEnergy(state.energy, mu);
+
     state.eccentricity = eccentricityFromEnergyAndAngularMomentum(
         state.energy,
         state.angularMomentum,
         mu
     );
     state.eccentricityVec = eccentricityVector(position, velocity, mu);
+
+    double cosTrueAnomaly = 0.0;
+    const double denom = state.eccentricity * state.radius;
+    if (denom != 0.0)
+    {
+        cosTrueAnomaly = dot(state.eccentricityVec, position) / denom;
+    }
     state.trueAnomaly = 0.0;
 
     return state;
