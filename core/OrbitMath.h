@@ -99,8 +99,8 @@ inline Vector2 eccentricityVector(const Vector2 &position,
     }
 
     Vector2 e;
-    // For now, we only computed rHat and hvOverMu.
-    // Next micro-steps will build full eccentricity vector using rHat.
+    e.x = hvOverMu.x - rHat.x;
+    e.y = hvOverMu.y - rHat.y;
 
     (void)velocity;
     (void)mu;
