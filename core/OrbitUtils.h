@@ -1,10 +1,11 @@
 #pragma once
 
+#include <cmath>
 #include "Vector2.h"
+#include "OrbitMath.h"
 #include "OrbitState.h"
 
 // A utility function that will compute an OrbitState from raw inputs.
-// Right now it contains only the structure (no physics calculations yet).
 
 inline OrbitState makeOrbitState(const Vector2 &position,
                                  const Vector2 &velocity,
@@ -19,6 +20,7 @@ inline OrbitState makeOrbitState(const Vector2 &position,
     // These will be computed later using physics formulas
     state.radius = radiusFromPosition(position);
     state.speed = speedFromVelocity(velocity);
+
     state.energy = (state.speed * state.speed) / 2.0 - mu / state.radius; // Compute specific orbital energy: ε = v²/2 − μ/r
     state.angularMomentum = std::abs(crossZ(position, velocity));
 

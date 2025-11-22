@@ -7,12 +7,12 @@
 // No orbital formulas here yet, only simple vector-based quantities.
 inline double radiusFromPosition(const Vector2 &position)
 {
-    return std::sqrt(position.x * position.x + positon.y * position.y)
+    return std::sqrt(position.x * position.x + position.y * position.y);
 }
 
 inline double speedFromVelocity(const Vector2 &velocity)
 {
-    return std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y)
+    return std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
 }
 
 inline double dot(const Vector2 &a, const Vector2 &b) // Dot product
@@ -50,7 +50,7 @@ inline double eccentricityFromEnergyAndAngularMomentum(double energy,
     const double mu2 = mu * mu;
     const double h2 = angularMomentum * angularMomentum;
 
-    const double argument = 1.0 + 2.0 * energy * h2 / m2;
+    const double argument = 1.0 + 2.0 * energy * h2 / mu2;
 
     if (argument < 0.0)
     {

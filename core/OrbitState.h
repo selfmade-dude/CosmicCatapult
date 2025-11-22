@@ -3,7 +3,6 @@
 #include "Vector2.h"
 
 // Represents the current orbital state of a spacecraft/particle.
-// No physics logic is implemented here yet - this is a pure data container.
 
 struct OrbitState
 {
@@ -23,4 +22,4 @@ struct OrbitState
     double trueAnomaly = 0.0;   // [rad]
 
     // This will be expanded later when we add semimajor axis, periapsis distance, etc.
-}
+};
