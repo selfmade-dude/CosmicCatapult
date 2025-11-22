@@ -28,6 +28,7 @@ inline OrbitState makeOrbitState(const Vector2 &position,
         state.angularMomentum,
         mu
     );
+    state.eccentricityVec = eccentricityVector(position, velocity, mu);
     state.trueAnomaly = 0.0;
 
     return state;
