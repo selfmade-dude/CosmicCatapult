@@ -37,7 +37,9 @@ inline OrbitState makeOrbitState(const Vector2 &position,
     {
         cosTrueAnomaly = dot(state.eccentricityVec, position) / denom;
     }
-    state.trueAnomaly = 0.0;
+    if (cosTrueAnomaly > 1.0) cosTrueAnomaly = 1.0;
+    if (cosTrueAnomaly < -1.0) cosTrueAnomaly = -1.0;
+    state.trueAnomaly = std::acos(cosTrueAnomaly);
 
     return state;
 }
