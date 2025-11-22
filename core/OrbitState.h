@@ -19,6 +19,7 @@ struct OrbitState
 
     double semiMajorAxis = 0.0; // a [m], can be negative for hyperbolic orbits
     double eccentricity = 0.0;  // dimensionless
+    Vector2 eccentricityVec; // full vector direction of periapsis
     double trueAnomaly = 0.0;   // [rad]
 
     // This will be expanded later when we add semimajor axis, periapsis distance, etc.
