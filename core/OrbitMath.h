@@ -78,8 +78,22 @@ inline double semiMajorAxisFromEnergy(double energy, double mu)
 inline Vector2 eccentricityVector(const Vector2 &position,
                                   const Vector2 &velocity,
                                   double mu)
-{
+{   
+    const double rMag = radiusFromPosition(position);
+
+    if (rMag == 0.0)
+    {
+        return Vector2(0.0, 0.0);
+    }
+
+    const Vector2 rHat(position.x / rMag, position.y / rMag);
+
     Vector2 e;
-    // Placeholder implementation - will be filled step by step later.
+    // For now, we only computed rHat.
+    // Next micro-steps will build full eccentricity vector using rHat.
+
+    (void)velocity;
+    (void)mu;
+
     return e;
 }
