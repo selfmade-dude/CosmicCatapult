@@ -88,8 +88,18 @@ inline Vector2 eccentricityVector(const Vector2 &position,
 
     const Vector2 rHat(position.x / rMag, position.y / rMag);
 
+    const double h = crossZ(position, velocity);
+
+    Vector2 hvOverMu;
+
+    if (mu != 0.0) 
+    {
+        hvOverMu.x = (h * velocity.y) / mu;
+        hvOverMu.y = (-h * velocity.x) / mu;
+    }
+
     Vector2 e;
-    // For now, we only computed rHat.
+    // For now, we only computed rHat and hvOverMu.
     // Next micro-steps will build full eccentricity vector using rHat.
 
     (void)velocity;
