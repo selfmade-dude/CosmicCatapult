@@ -74,3 +74,12 @@ inline double semiMajorAxisFromEnergy(double energy, double mu)
 
     return -mu / (2.0 * energy);
 }                                   
+
+inline Vector2 eccentricityVector(const Vector2 &position,
+                                  const Vector2 &velocity,
+                                  double mu)
+{
+    Vector2 e;
+    // Placeholder implementation - will be filled step by step later.
+    return e;
+}
