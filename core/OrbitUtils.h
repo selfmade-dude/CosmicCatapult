@@ -5,6 +5,8 @@
 #include "OrbitMath.h"
 #include "OrbitState.h"
 
+const double eps = 1e-6;
+
 // A utility function that will compute an OrbitState from raw inputs.
 
 inline OrbitState makeOrbitState(const Vector2 &position,
@@ -32,6 +34,19 @@ inline OrbitState makeOrbitState(const Vector2 &position,
         mu
     );
     state.eccentricityVec = eccentricityVector(position, velocity, mu);
+    
+    if (state.eccentricity < 1.0 - eps)
+    {
+        state.orbitType = OrbitType::Elliptic;
+    }
+    else if (state.eccentricity > 1.0 + eps)
+    {
+        state.orbitType = OrbitType::Hyperbolic;
+    }
+    else
+    {
+        state.orbitType = OrbitType::Parabolic;
+    }
 
     state.periapsis = state.semiMajorAxis * (1.0 - state.eccentricity);
     state.apoapsis = state.semiMajorAxis * (1.0 + state.eccentricity);
