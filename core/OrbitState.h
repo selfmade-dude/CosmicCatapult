@@ -4,6 +4,13 @@
 
 // Represents the current orbital state of a spacecraft/particle.
 
+enum class OrbitType
+{
+    Elliptic,
+    Parabolic,
+    Hyperbolic
+};
+
 struct OrbitState
 {
     Vector2 position;      // [m]
@@ -20,6 +27,8 @@ struct OrbitState
     double eccentricity = 0.0;  // dimensionless
     Vector2 eccentricityVec; // full vector direction of periapsis
     double trueAnomaly = 0.0;   // [rad]
+
+    OrbitType orbitType = OrbitType::Elliptic;
 
     double periapsis = 0.0; // [m]
     double apoapsis = 0.0; // [m]
