@@ -21,5 +21,6 @@ struct OrbitState
     Vector2 eccentricityVec; // full vector direction of periapsis
     double trueAnomaly = 0.0;   // [rad]
 
-    // This will be expanded later when we add semimajor axis, periapsis distance, etc.
+    double periapsis = 0.0; // [m]
+    double apoapsis = 0.0; // [m]
 };
