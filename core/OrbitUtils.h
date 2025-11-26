@@ -33,6 +33,9 @@ inline OrbitState makeOrbitState(const Vector2 &position,
     );
     state.eccentricityVec = eccentricityVector(position, velocity, mu);
 
+    state.periapsis = state.semiMajorAxis * (1.0 - state.eccentricity);
+    state.apoapsis = state.semiMajorAxis * (1.0 + state.eccentricity);
+
     double cosTrueAnomaly = 0.0;
     const double denom = state.eccentricity * state.radius;
     if (denom != 0.0)

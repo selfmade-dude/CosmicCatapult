@@ -17,6 +17,8 @@ inline std::string orbitStateToString(const OrbitState &state)
     out << " angularMomentum: " << state.angularMomentum << "\n";
     out << " eccentricity:    " << state.eccentricity << "\n";
     out << " eccentricityVec: (" << state.eccentricityVec.x << ", " << state.eccentricityVec.y << ")\n";
+    out << " periapsis:       " << state.periapsis << "\n";
+    out << " apoapsis:        " << state.apoapsis << "\n";
     out << " semiMajorAxis:   " << state.semiMajorAxis << "\n";
     out << " trueAnomaly:     " << state.trueAnomaly << "\n";
 
