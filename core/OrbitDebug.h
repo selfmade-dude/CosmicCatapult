@@ -34,9 +34,9 @@ inline std::string orbitStateToString(const OrbitState &state)
     out << "Position  (x,y): (" << state.position.x << ", " << state.position.y << ")\n";
     out << "Velocity  (x,y): (" << state.velocity.x << ", " << state.velocity.y << ")\n";
 
-    out << "Radius:          " << state.radius << "\n";
-    out << "Speed:           " << state.speed << "\n";
-    out << "Energy:          " << state.energy << "\n";
+    out << "Radius:          " << state.radius << " km\n";
+    out << "Speed:           " << state.speed << " km/s\n";
+    out << "Energy:          " << state.energy << " km^2/s^2\n";
     out << "Ang. momentum:   " << state.angularMomentum << "\n";
 
     out << "Semi-major axis: " << state.semiMajorAxis << "\n";
