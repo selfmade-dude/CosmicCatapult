@@ -2,25 +2,51 @@
 
 #include <string>
 #include <sstream>
+#include <iomanip>
+#include "MathUtils.h"
 #include "OrbitState.h"
 
 inline std::string orbitStateToString(const OrbitState &state)
 {
     std::ostringstream out;
 
-    out << "OrbitState:\n";
-    out << " position:        (" << state.position.x << ", " << state.position.y << ")\n";
-    out << " velocity:        (" << state.velocity.x << ", " << state.velocity.y << ")\n";
-    out << " radius:          " << state.radius << "\n";
-    out << " speed:           " << state.speed << "\n";
-    out << " energy:          " << state.energy << "\n";
-    out << " angularMomentum: " << state.angularMomentum << "\n";
-    out << " eccentricity:    " << state.eccentricity << "\n";
-    out << " eccentricityVec: (" << state.eccentricityVec.x << ", " << state.eccentricityVec.y << ")\n";
-    out << " periapsis:       " << state.periapsis << "\n";
-    out << " apoapsis:        " << state.apoapsis << "\n";
-    out << " semiMajorAxis:   " << state.semiMajorAxis << "\n";
-    out << " trueAnomaly:     " << state.trueAnomaly << "\n";
+    // Configure numeric formatting
+    out << std::fixed << std::setprecision(3);
+
+    // Orbit type as text
+    const char *typeText = "Elliptic";
+    if (state.orbitType == OrbitType::Hyperbolic)
+    {
+        typeText = "Hyperbolic";
+    }
+    else if (state.orbitType == OrbitType::Parabolic)
+    {
+        typeText = "Parabolic";
+    }
+
+    // Convert true anomaly to degrees for easier reading
+    const double trueAnomalyDeg = math::rad2deg(state.trueAnomaly);
+
+    out << "Orbit State\n";
+    out << "===========\n";
+    out << "Type:             " << typeText << "\n\n";
+
+    out << "Position  (x,y): (" << state.position.x << ", " << state.position.y << ")\n";
+    out << "Velocity  (x,y): (" << state.velocity.x << ", " << state.velocity.y << ")\n";
+
+    out << "Radius:          " << state.radius << "\n";
+    out << "Speed:           " << state.speed << "\n";
+    out << "Energy:          " << state.energy << "\n";
+    out << "Ang. momentum:   " << state.angularMomentum << "\n";
+
+    out << "Semi-major axis: " << state.semiMajorAxis << "\n";
+    out << "Eccentricity:    " << state.eccentricity << "\n";
+    out << "Periapsis:       " << state.periapsis << "\n";
+    out << "Apoapsis:        " << state.apoapsis << "\n";
+    
+    out << "Ecc. vector (x,y): (" 
+        << state.eccentricityVec.x << ", " << state.eccentricityVec.y << ")\n";
+    out << "True anomaly:    " << trueAnomalyDeg << " deg\n";
 
     return out.str();
 }
