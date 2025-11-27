@@ -3,8 +3,6 @@
 #include "MainWindow.h"
 #include "OrbitUtils.h"
 #include "OrbitDebug.h"
-
-// Include the core header (test!)
 #include "Body.h"
 
 int main(int argc, char *argv[])
@@ -18,8 +16,11 @@ int main(int argc, char *argv[])
     std::cout << orbitStateToString(st) << std::endl;
 
     QApplication app(argc, argv);
-
     MainWindow window;
+
+    const QString text = QString::fromStdString(orbitStateToString(st));
+    window.setOrbitText(text);
+    
     window.show();
 
     return app.exec();

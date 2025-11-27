@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QLabel>
 
 class MainWindow : public QMainWindow
 {
@@ -9,4 +10,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void setOrbitText(const QString &text);
+
+private:
+    QLabel *m_stateLabel = nullptr;
 };
