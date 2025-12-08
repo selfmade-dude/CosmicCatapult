@@ -71,3 +71,8 @@ inline State2 stepRK4(const State2 &state, double dt, double mu)
 
     return result;
 }
+
+inline void simulateStep(State2 &state, double dt, double mu)
+{
+    state = stepRK4(state, dt, mu);
+}
