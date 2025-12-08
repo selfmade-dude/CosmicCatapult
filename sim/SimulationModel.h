@@ -1,10 +1,11 @@
 #pragma once
 
+#include <vector>
 #include "SimulationController.h"
 #include "SimulationClock.h"
 #include "TrajectoryBuffer.h"
 
-class SimulaionModel
+class SimulationModel
 {
 public:
     SimulationModel(const State2 &initialState, double muValue, double dtValue, IntegratorType integratorType = IntegratorType::RK4, std::size_t trajectoryMaxSize = 5000) : controller_(initialState, muValue, dtValue, integratorType), clock_(0.0), trajectory_(trajectoryMaxSize), controllerDt_(dtValue)
@@ -15,8 +16,6 @@ public:
     void update()
     {
         controller_.step();
-        clock_.advance(controller_.state().dt());
-
         clock_.advance(dt());
         trajectory_.addPoint(controller_.state().position);
     }
@@ -26,7 +25,7 @@ public:
         controller_.reset(newState);
         clock_.reset(0.0);
         trajectory_.clear();
-        trajectroy_.addPoint(newState.position);
+        trajectory_.addPoint(newState.position);
     }
 
     const State2& state() const

@@ -56,7 +56,7 @@ inline State2 stepRK4(const State2 &state, double dt, double mu)
 
     State2 temp3;
     temp3.position = state.position + k2.position * (dt * 0.5);
-    temp3.velocity = state.velocity + k2.veloctiy * (dt * 0.5);
+    temp3.velocity = state.velocity + k2.velocity * (dt * 0.5);
     const State2 k3 = derivatives(temp3, mu);
 
     State2 temp4;

@@ -5,7 +5,7 @@
 class AppModel
 {
 public: 
-    AppModel(const State2 &initialState, double muValue, double dtValue, IntegratorType integratorType = IntegratroType::RK4, std::size_t trajectoryMaxSize = 5000) : sim_(initialState, muValue, dtValue, integratorType, trajectoryMaxSize)
+    AppModel(const State2 &initialState, double muValue, double dtValue, IntegratorType integratorType = IntegratorType::RK4, std::size_t trajectoryMaxSize = 5000) : sim_(initialState, muValue, dtValue, integratorType, trajectoryMaxSize)
     {
     }
 
@@ -51,4 +51,4 @@ public:
 
 private:
     SimulationModel sim_;
-}
+};
