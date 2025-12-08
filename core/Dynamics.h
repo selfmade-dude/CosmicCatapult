@@ -31,3 +31,16 @@ inline State2D derivatives(const State2D &state, double mu)
 
     return result;
 }
+
+inline State2D stepEuler(const State2D &state, double dt, double mu)
+{
+    State2D k = derivatives(state, mu);
+
+    State2D result;
+
+    result.position = state.position + k.position * dt;
+
+    result.velocity = state.velocity + k.velocity * dt;
+
+    return result;
+}
