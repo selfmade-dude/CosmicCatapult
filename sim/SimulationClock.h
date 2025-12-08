@@ -24,4 +24,4 @@ public:
 
 private:
     double t_;
-}
+};
