@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include "AppModel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -15,4 +16,6 @@ public:
 
 private:
     QLabel *m_stateLabel = nullptr;
+
+    AppModel *appModel_ = nullptr;
 };
