@@ -33,10 +33,42 @@ MainWindow::MainWindow(QWidget *parent)
             .arg(st.velocity.x)
             .arg(st.velocity.y)
     );
+
+    m_timer = new QTimer(this);
+    m_timer->setInterval(50);
+
+    connect(m_timer, &QTimer::timeout, this, &MainWindow::onSimulationTick);
+
+    m_timer->start();
 }
 
 MainWindow::~MainWindow()
 {
+    delete appModel_;
+}
+
+void MainWindow::onSimulationTick()
+{
+    if (!appModel_ || !m_stateLabel)
+    {
+        return;
+    }
+
+    appModel_->update();
+
+    const State2 &st = appModel_->state();
+    double t = appModel_->time();
+
+    m_stateLabel->setText(
+        QString("t = %1 s\n"
+                "position: (%2, %3)\n"
+                "velocity: (%4, %5)")
+            .arg(t, 0, 'f',2)
+            .arg(st.position.x, 0, 'f', 2)
+            .arg(st.position.y, 0, 'f', 2)
+            .arg(st.velocity.x, 0, 'f', 4)
+            .arg(st.velocity.y, 0, 'f', 4)
+    );
 }
 
 void MainWindow::setOrbitText(const QString &text)
