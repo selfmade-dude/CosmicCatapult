@@ -25,6 +25,37 @@ public:
         update();
     }
 
+    void autoFitBounds(const std::vector<Vector2> &trajectory)
+    {
+        if (trajectory.empty())
+        {
+            return;
+        }
+
+        double minX = trajectory[0].x;
+        double maxX = trajectory[0].x;
+        double minY = trajectory[0].y;
+        double maxY = trajectory[0].y;
+
+        for (const Vector2 &p : trajectory)
+        {
+            if (p.x < minX) minX = p.x;
+            if (p.x > maxX) maxX = p.x;
+            if (p.y < minY) minY = p.y;
+            if (p.y > maxY) maxY = p.y;
+        }
+
+        double dx = (maxX - minX) * 0.10;
+        double dy = (maxY - minY) * 0.10;
+
+        minX -= dx;
+        maxX += dx;
+        minY -= dy;
+        maxY += dy;
+
+        setWorldBounds(minX, maxX, minY, maxY);
+    }
+
 protected:
     void resizeEvent(QResizeEvent *event) override
     {
