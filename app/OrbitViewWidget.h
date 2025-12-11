@@ -8,8 +8,6 @@
 
 class OrbitViewWidget : public QWidget
 {
-    Q_OBJECT
-
 public:
     explicit OrbitViewWidget(QWidget *parent = nullptr) : QWidget(parent), appModel_(nullptr)
     {
@@ -76,7 +74,7 @@ protected:
         }
 
         const State2 &st = appModel_->state();
-        ScreenPoint sp = converter.toScreen(st.position);
+        ScreenPoint sp = converter_.toScreen(st.position);
 
         painter.setBrush(Qt::yellow);
         painter.setPen(Qt::NoPen);
@@ -86,4 +84,4 @@ protected:
 private:
     AppModel *appModel_;
     ScreenSpaceConverter converter_;
-}
+};

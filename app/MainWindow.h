@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QPushButton>
 #include "AppModel.h"
+#include "OrbitViewWidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +26,7 @@ private:
     QPushButton *m_pauseButton = nullptr;
     AppModel *appModel_ = nullptr;
     QTimer *m_timer = nullptr;
+    OrbitViewWidget *orbitView_ = nullptr;
 
     bool isPaused_ = false;
 };

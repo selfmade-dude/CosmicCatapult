@@ -18,8 +18,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_pauseButton = new QPushButton(tr("Pause"), central);
 
+    orbitView_ = new OrbitViewWidget(central);
+    orbitView_->setMinimumHeight(400);
+
     layout->addWidget(m_stateLabel);
     layout->addWidget(m_pauseButton);
+    layout->addWidget(orbitView_);
 
     setCentralWidget(central);
 
@@ -32,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     double dt = 0.1;
 
     appModel_ = new AppModel(initialState, mu, dt);
+    orbitView_->setAppModel(appModel_);
+    orbitView_->setWorldBounds(-15000.0, 15000.0, -15000.0, 15000.0);
 
     const State2 &st = appModel_->state();
     
@@ -83,6 +89,8 @@ void MainWindow::onSimulationTick()
             .arg(st.velocity.x, 0, 'f', 4)
             .arg(st.velocity.y, 0, 'f', 4)
     );
+
+    orbitView_->update();
 }
 
 void MainWindow::onPauseClicked()

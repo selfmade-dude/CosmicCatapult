@@ -16,8 +16,8 @@ public:
           worldMaxX_(1.0),
           worldMinY_(-1.0),
           worldMaxY_(1.0),
-          screenWidth(800),
-          screenHeight(600)
+          screenWidth_(800),
+          screenHeight_(600)
     {
     }
 
