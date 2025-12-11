@@ -1,18 +1,27 @@
 #include "MainWindow.h"
 #include <QString>
+#include <QVBoxLayout>
+#include <QWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setWindowTitle(QStringLiteral("Cosmic Catapult"));
+    setWindowTitle(tr("Cosmic Catapult"));
     resize(800, 600);
 
-    m_stateLabel = new QLabel(this);
+    QWidget *central = new QWidget(this);
+    QVBoxLayout *layout = new QVBoxLayout(central);
 
+    m_stateLabel = new QLabel(central);
     m_stateLabel->setWordWrap(true);
     m_stateLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-    setCentralWidget(m_stateLabel);
+    m_pauseButton = new QPushButton(tr("Pause"), central);
+
+    layout->addWidget(m_stateLabel);
+    layout->addWidget(m_pauseButton);
+
+    setCentralWidget(central);
 
     State2 initialState;
 
@@ -40,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_timer, &QTimer::timeout, this, &MainWindow::onSimulationTick);
 
     m_timer->start();
+
+    connect(m_pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseClicked);
 }
 
 MainWindow::~MainWindow()
@@ -54,7 +65,10 @@ void MainWindow::onSimulationTick()
         return;
     }
 
-    appModel_->update();
+    if (!isPaused_)
+    {
+        appModel_->update();
+    }
 
     const State2 &st = appModel_->state();
     double t = appModel_->time();
@@ -69,6 +83,25 @@ void MainWindow::onSimulationTick()
             .arg(st.velocity.x, 0, 'f', 4)
             .arg(st.velocity.y, 0, 'f', 4)
     );
+}
+
+void MainWindow::onPauseClicked()
+{
+    if (!m_timer)
+    {
+        return;
+    }
+
+    isPaused_ = !isPaused_;
+
+    if (isPaused_)
+    {
+        m_pauseButton->setText(tr("Resume"));
+    }
+    else
+    {
+        m_pauseButton->setText(tr("Pause"));
+    }
 }
 
 void MainWindow::setOrbitText(const QString &text)
