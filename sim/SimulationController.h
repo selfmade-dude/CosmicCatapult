@@ -2,6 +2,7 @@
 
 #include "../core/State2.h"
 #include "../core/Dynamics.h"
+#include <functional>
 
 enum class IntegratorType
 {
@@ -26,6 +27,20 @@ public:
         case IntegratorType::RK4:
         default:
             state_ = stepRK4(state_, dt_, mu_);
+            break;
+        }
+    }
+
+    void stepWithAcceleration(const std::function<Vector2(const Vector2&)> &accel)
+    {
+        switch (integrator_)
+        {
+        case IntegratorType::Euler:
+            state_ = stepEuler(state_, dt_, accel);
+            break;
+        case IntegratorType::RK4:
+        default:
+            state_ = stepRK4(state_, dt_, accel);
             break;
         }
     }

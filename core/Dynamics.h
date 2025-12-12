@@ -72,6 +72,19 @@ inline State2 stepEuler(const State2 &state, double dt, double mu)
     return result;
 }
 
+inline State2 stepEuler(const State2 &state, double dt, const std::function<Vector2(const Vector2&)> &accel)
+{
+    State2 k = derivatives(state, accel);
+
+    State2 result;
+
+    result.position = state.position + k.position * dt;
+
+    result.velocity = state.velocity + k.velocity * dt;
+
+    return result;
+}
+
 inline State2 stepRK4(const State2 &state, double dt, double mu)
 {
     const State2 k1 = derivatives(state, mu);
