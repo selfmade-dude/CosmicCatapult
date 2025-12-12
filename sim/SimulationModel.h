@@ -1,9 +1,11 @@
 #pragma once
 
 #include <vector>
+#include <cmath>
 #include "SimulationController.h"
 #include "SimulationClock.h"
 #include "TrajectoryBuffer.h"
+#include "../core/Body.h"
 
 class SimulationModel
 {
@@ -11,11 +13,28 @@ public:
     SimulationModel(const State2 &initialState, double muValue, double dtValue, IntegratorType integratorType = IntegratorType::RK4, std::size_t trajectoryMaxSize = 5000) : controller_(initialState, muValue, dtValue, integratorType), clock_(0.0), trajectory_(trajectoryMaxSize), controllerDt_(dtValue)
     {
         trajectory_.addPoint(initialState.position);
+
+        sun_.position = Vector2(0.0, 0.0);
+        sun_.mu = muValue;
+
+        jupiter_.mu = muValue * 0.001;
+        jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
     }
 
     void update()
     {
-        controller_.step();
+        jupiterAngle_ += jupiterAngularSpeed_ * dt();
+
+        jupiter_.position.x = jupiterOrbitRadius_ * std::cos(jupiterAngle_);
+        jupiter_.position.y = jupiterOrbitRadius_ * std::sin(jupiterAngle_);
+
+        controller_.stepWithAcceleration([this](const Vector2 &pos)
+        {
+            const Vector2 aSun = gravitaionalAccelerationFromBody(pos, sun_);
+            const Vector2 aJupiter = gravitaionalAccelerationFromBody(pos, jupiter_);
+            return aSun + aJupiter;
+        });
+
         clock_.advance(dt());
         trajectory_.addPoint(controller_.state().position);
     }
@@ -26,6 +45,9 @@ public:
         clock_.reset(0.0);
         trajectory_.clear();
         trajectory_.addPoint(newState.position);
+
+        jupiterAngle_ = 0.0;
+        jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
     }
 
     const State2& state() const
@@ -41,6 +63,16 @@ public:
     const std::vector<Vector2>& trajectory() const
     {
         return trajectory_.points();
+    }
+
+    const Body& sun() const
+    {
+        return sun_;
+    }
+
+    const Body& jupiter() const
+    {
+        return jupiter_;
     }
 
     double dt() const
@@ -69,4 +101,11 @@ private:
     SimulationClock clock_;
     TrajectoryBuffer trajectory_;
     double controllerDt_ = 0.0;
+
+    Body sun_;
+    Body jupiter_;
+
+    double jupiterAngle_ = 0.0;
+    double jupiterOrbitRadius_ = 12000.0;
+    double jupiterAngularSpeed_ = 0.00005;
 };
