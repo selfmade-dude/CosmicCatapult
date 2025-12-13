@@ -28,5 +28,18 @@ private:
     QTimer *m_timer = nullptr;
     OrbitViewWidget *orbitView_ = nullptr;
 
+    enum class SimulationSpeed
+    {
+        VerySlow,
+        Slow,
+        Normal,
+        Fast,
+        VeryFast
+    };
+
+    SimulationSpeed simulationSpeed_ = SimulationSpeed::Normal;
+
+    int stepsPerTickForSpeed(SimulationSpeed speed) const;
+
     bool isPaused_ = false;
 };

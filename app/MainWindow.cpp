@@ -3,6 +3,25 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
+int MainWindow::stepsPerTickForSpeed(MainWindow::SimulationSpeed speed) const
+{
+    switch (speed)
+    {
+    case MainWindow::SimulationSpeed::VerySlow:
+        return 1;
+    case MainWindow::SimulationSpeed::Slow:
+        return 2;
+    case MainWindow::SimulationSpeed::Normal:
+        return 5;
+    case MainWindow::SimulationSpeed::Fast:
+        return 15;
+    case MainWindow::SimulationSpeed::VeryFast:
+        return 50;
+    default:
+        return 5;
+    }
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
