@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QResizeEvent>
+#include <QColor>
 
 OrbitViewWidget::OrbitViewWidget(QWidget *parent) : QWidget(parent), appModel_(nullptr)
 {
@@ -74,6 +75,26 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
     {
         return;
     }
+
+     painter.setPen(QPen(QColor(80, 80, 80), 1));
+
+    const ScreenPoint originScreen = converter_.toScreen(Vector2(0.0, 0.0));
+    painter.drawLine(QPointF(0.0, originScreen.y), QPointF(width(), originScreen.y));
+    painter.drawLine(QPointF(originScreen.x, 0.0), QPointF(originScreen.x, height()));
+
+    const Vector2 sunWorld = appModel_->sunPosition();
+    const ScreenPoint sunScreen = converter_.toScreen(sunWorld);
+
+    painter.setBrush(QBrush(Qt::yellow));
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(QPointF(sunScreen.x, sunScreen.y), 6.0, 6.0);
+
+    const Vector2 jupiterWorld = appModel_->jupiterPosition();
+    const ScreenPoint jupiterScreen = converter_.toScreen(jupiterWorld);
+
+    painter.setBrush(QBrush(QColor(255, 165, 0))); 
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(QPointF(jupiterScreen.x, jupiterScreen.y), 5.0, 5.0);
 
     QPen pen(Qt::cyan);
     pen.setWidth(2);
