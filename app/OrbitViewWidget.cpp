@@ -76,7 +76,7 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
         return;
     }
 
-     painter.setPen(QPen(QColor(80, 80, 80), 1));
+    painter.setPen(QPen(QColor(80, 80, 80), 1));
 
     const ScreenPoint originScreen = converter_.toScreen(Vector2(0.0, 0.0));
     painter.drawLine(QPointF(0.0, originScreen.y), QPointF(width(), originScreen.y));
@@ -95,6 +95,13 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
     painter.setBrush(QBrush(QColor(255, 165, 0))); 
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(QPointF(jupiterScreen.x, jupiterScreen.y), 5.0, 5.0);
+
+    const Vector2 earthWorld = appModel_->earthPosition();
+    const ScreenPoint earthScreen = converter_.toScreen(earthWorld);
+
+    painter.setBrush(QBrush(QColor(100, 170, 255))); 
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(QPointF(earthScreen.x, earthScreen.y), 4.0, 4.0);
 
     QPen pen(Qt::cyan);
     pen.setWidth(2);
