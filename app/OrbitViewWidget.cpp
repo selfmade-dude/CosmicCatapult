@@ -70,18 +70,13 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
         return;
     }
 
-    const std::vector<Vector2> &traj = appModel_->trajectory();
-    if (traj.empty())
-    {
-        return;
-    }
-
     painter.setPen(QPen(QColor(80, 80, 80), 1));
 
     const ScreenPoint originScreen = converter_.toScreen(Vector2(0.0, 0.0));
     painter.drawLine(QPointF(0.0, originScreen.y), QPointF(width(), originScreen.y));
     painter.drawLine(QPointF(originScreen.x, 0.0), QPointF(originScreen.x, height()));
 
+    //Sun
     const Vector2 sunWorld = appModel_->sunPosition();
     const ScreenPoint sunScreen = converter_.toScreen(sunWorld);
 
@@ -89,6 +84,7 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(QPointF(sunScreen.x, sunScreen.y), 6.0, 6.0);
 
+    //Jupiter
     const Vector2 jupiterWorld = appModel_->jupiterPosition();
     const ScreenPoint jupiterScreen = converter_.toScreen(jupiterWorld);
 
@@ -96,12 +92,70 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(QPointF(jupiterScreen.x, jupiterScreen.y), 5.0, 5.0);
 
+    const std::vector<Vector2> &jupiterTraj = appModel_->jupiterTrajectory();
+    if (!jupiterTraj.empty())
+    {
+        QPen jupiterPen(QColor(255, 165, 0));
+        jupiterPen.setWidth(2);
+        painter.setPen(jupiterPen);
+
+        QPointF prev;
+        bool first = true;
+
+        for (const Vector2 &p : jupiterTraj)
+        {
+            const ScreenPoint sp = converter_.toScreen(p);
+            const QPointF pt(sp.x, sp.y);
+
+            if (!first)
+            {
+                painter.drawLine(prev, pt);
+            }
+
+            prev = pt;
+            first = false;
+        }
+    }
+
+    //Earth
     const Vector2 earthWorld = appModel_->earthPosition();
     const ScreenPoint earthScreen = converter_.toScreen(earthWorld);
 
     painter.setBrush(QBrush(QColor(100, 170, 255))); 
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(QPointF(earthScreen.x, earthScreen.y), 4.0, 4.0);
+
+    const std::vector<Vector2> &earthTraj = appModel_->earthTrajectory();
+    if (earthTraj.empty())
+    {
+        QPen earthPen(QColor(100, 170, 255));
+        earthPen.setWidth(2);
+        painter.setPen(earthPen);
+
+        QPointF prev;
+        bool first = true;
+
+        for (const Vector2 &p : earthTraj)
+        {
+            const ScreenPoint sp = converter_.toScreen(p);
+            const QPointF pt(sp.x, sp.y);
+
+            if (!first)
+            {
+                painter.drawLine(prev, pt);
+            }
+
+            prev = pt;
+            first = false;
+        }
+    }
+
+    //Ship
+    const std::vector<Vector2> &traj = appModel_->trajectory();
+    if (traj.empty())
+    {
+        return;
+    }
 
     QPen pen(Qt::cyan);
     pen.setWidth(2);
