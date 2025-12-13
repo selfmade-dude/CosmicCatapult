@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <QPushButton>
+#include <QComboBox>
 #include "AppModel.h"
 #include "OrbitViewWidget.h"
 
@@ -27,6 +28,7 @@ private:
     AppModel *appModel_ = nullptr;
     QTimer *m_timer = nullptr;
     OrbitViewWidget *orbitView_ = nullptr;
+    QComboBox *speedComboBox_ = nullptr;
 
     enum class SimulationSpeed
     {

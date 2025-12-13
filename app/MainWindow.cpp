@@ -37,12 +37,22 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_pauseButton = new QPushButton(tr("Pause"), central);
 
+    speedComboBox_ = new QComboBox(this);
+    speedComboBox_->addItem(tr("Very slow"), static_cast<int>(SimulationSpeed::VerySlow));
+    speedComboBox_->addItem(tr("Slow"), static_cast<int>(SimulationSpeed::Slow));
+    speedComboBox_->addItem(tr("Normal"), static_cast<int>(SimulationSpeed::Normal));
+    speedComboBox_->addItem(tr("Fast"), static_cast<int>(SimulationSpeed::Fast));
+    speedComboBox_->addItem(tr("Very fast"), static_cast<int>(SimulationSpeed::VeryFast));
+    speedComboBox_->setCurrentIndex(2);
+
     orbitView_ = new OrbitViewWidget(central);
     orbitView_->setMinimumHeight(400);
 
     layout->addWidget(m_stateLabel);
-    layout->addWidget(m_pauseButton);
+    layout->addWidget(new QLabel(tr("Speed:"), this));
+    layout->addWidget(speedComboBox_);
     layout->addWidget(orbitView_);
+    layout->addWidget(m_pauseButton);
 
     setCentralWidget(central);
 
@@ -76,6 +86,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_timer->start();
 
     connect(m_pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseClicked);
+
+    connect(speedComboBox_, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+        [this](int index)
+        {
+            const int value = speedComboBox_->itemData(index).toInt();
+            simulationSpeed_ = static_cast<SimulationSpeed>(value);
+        });
 }
 
 MainWindow::~MainWindow()
