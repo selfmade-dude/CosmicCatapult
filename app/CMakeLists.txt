@@ -5,6 +5,7 @@ add_executable(cosmic_catapult_app
     main.cpp
     MainWindow.cpp
     MainWindow.h
+    OrbitViewWidget.cpp
 )
 
 # Ensure the target can find headers in this directory
