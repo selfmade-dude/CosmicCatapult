@@ -126,7 +126,7 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
     painter.drawEllipse(QPointF(earthScreen.x, earthScreen.y), 4.0, 4.0);
 
     const std::vector<Vector2> &earthTraj = appModel_->earthTrajectory();
-    if (earthTraj.empty())
+    if (!earthTraj.empty())
     {
         QPen earthPen(QColor(100, 170, 255));
         earthPen.setWidth(2);

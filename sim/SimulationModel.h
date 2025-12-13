@@ -13,8 +13,6 @@ public:
     SimulationModel(const State2 &initialState, double muValue, double dtValue, IntegratorType integratorType = IntegratorType::RK4, std::size_t trajectoryMaxSize = 5000) : controller_(initialState, muValue, dtValue, integratorType), clock_(0.0), trajectory_(trajectoryMaxSize), controllerDt_(dtValue)
     {
         trajectory_.addPoint(initialState.position);
-        earthTrajectory_.addPoint(earth_.position);
-        jupiterTrajectory_.addPoint(jupiter_.position);
 
         sun_.position = Vector2(0.0, 0.0);
         sun_.mu = muValue;
@@ -23,6 +21,9 @@ public:
         jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
 
         earth_.position = Vector2(earthOrbitRadius_, 0.0);
+
+        earthTrajectory_.addPoint(earth_.position);
+        jupiterTrajectory_.addPoint(jupiter_.position);
     }
 
     void update()
@@ -60,14 +61,14 @@ public:
         earthTrajectory_.clear();
         jupiterTrajectory_.clear();
 
-        earthTrajectory_.addPoint(earth_.position);
-        jupiterTrajectory_.addPoint(jupiter_.position);
-
         jupiterAngle_ = 0.0;
         jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
 
         earthAngle_ = 0.0;
         earth_.position = Vector2(earthOrbitRadius_, 0.0);
+
+        earthTrajectory_.addPoint(earth_.position);
+        jupiterTrajectory_.addPoint(jupiter_.position);
     }
 
     const State2& state() const
