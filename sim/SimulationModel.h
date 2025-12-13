@@ -70,9 +70,19 @@ public:
         return sun_;
     }
 
+    const Vector2& sunPosition() const
+    {
+        return sun_.position;
+    }
+
     const Body& jupiter() const
     {
         return jupiter_;
+    }
+
+    const Vector2& jupiterPosition() const
+    {
+        return jupiter_.position;
     }
 
     double dt() const

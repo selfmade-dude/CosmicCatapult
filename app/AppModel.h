@@ -49,6 +49,16 @@ public:
         return sim_.trajectory();
     }
 
+    const Vector2& sunPosition() const
+    {
+        return sim_.sunPosition();
+    }
+
+    const Vector2& jupiterPosition() const
+    {
+        return sim_.jupiterPosition();
+    }
+
 private:
     SimulationModel sim_;
 };
