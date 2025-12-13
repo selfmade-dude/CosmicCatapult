@@ -92,7 +92,23 @@ void MainWindow::onSimulationTick()
 
     if (!isPaused_)
     {
-        appModel_->update();
+        int steps = stepsPerTickForSpeed(simulationSpeed_);
+
+        if (steps < 1)
+        {
+            steps = 1;
+        }
+
+        const int maxSteps = 500;
+        if (maxSteps > maxSteps)
+        {
+            steps = maxSteps;
+        }
+
+        for (int i = 0; i < steps; ++i)
+        {
+            appModel_->update();
+        }
     }
 
     const State2 &st = appModel_->state();
