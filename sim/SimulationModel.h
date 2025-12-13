@@ -19,6 +19,8 @@ public:
 
         jupiter_.mu = muValue * 0.001;
         jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
+
+        earth_.position = Vector2(earthOrbitRadius_, 0.0);
     }
 
     void update()
@@ -27,6 +29,11 @@ public:
 
         jupiter_.position.x = jupiterOrbitRadius_ * std::cos(jupiterAngle_);
         jupiter_.position.y = jupiterOrbitRadius_ * std::sin(jupiterAngle_);
+
+        earthAngle_ += earthAngularSpeed_ * dt();
+
+        earth_.position.x = earthOrbitRadius_ * std::cos(earthAngle_);
+        earth_.position.y = earthOrbitRadius_ * std::sin(earthAngle_);
 
         controller_.stepWithAcceleration([this](const Vector2 &pos)
         {
@@ -48,6 +55,9 @@ public:
 
         jupiterAngle_ = 0.0;
         jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
+
+        earthAngle_ = 0.0;
+        earth_.position = Vector2(earthOrbitRadius_, 0.0);
     }
 
     const State2& state() const
@@ -85,6 +95,11 @@ public:
         return jupiter_.position;
     }
 
+    const Vector2& earthPosition() const
+    {
+        return earth_.position;
+    }
+
     double dt() const
     {
         return controllerDt_;
@@ -118,4 +133,10 @@ private:
     double jupiterAngle_ = 0.0;
     double jupiterOrbitRadius_ = 12000.0;
     double jupiterAngularSpeed_ = 0.00005;
+
+    Body earth_;
+
+    double earthAngle_ = 0.0;
+    double earthOrbitRadius_ = 8000.0;
+    double earthAngularSpeed_ = 0.00020;
 };

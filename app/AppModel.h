@@ -59,6 +59,11 @@ public:
         return sim_.jupiterPosition();
     }
 
+    const Vector2& earthPosition() const
+    {
+        return sim_.earthPosition();
+    }
+
 private:
     SimulationModel sim_;
 };
