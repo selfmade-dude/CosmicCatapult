@@ -59,9 +59,19 @@ public:
         return sim_.jupiterPosition();
     }
 
+    const std::vector<Vector2>& jupiterTrajectory() const
+    {
+        return sim_.jupiterTrajectory();
+    }
+
     const Vector2& earthPosition() const
     {
         return sim_.earthPosition();
+    }
+
+    const std::vector<Vector2>& earthTrajectory() const
+    {
+        return sim_.earthTrajectory();
     }
 
 private:

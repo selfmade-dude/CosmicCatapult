@@ -13,6 +13,8 @@ public:
     SimulationModel(const State2 &initialState, double muValue, double dtValue, IntegratorType integratorType = IntegratorType::RK4, std::size_t trajectoryMaxSize = 5000) : controller_(initialState, muValue, dtValue, integratorType), clock_(0.0), trajectory_(trajectoryMaxSize), controllerDt_(dtValue)
     {
         trajectory_.addPoint(initialState.position);
+        earthTrajectory_.addPoint(earth_.position);
+        jupiterTrajectory_.addPoint(jupiter_.position);
 
         sun_.position = Vector2(0.0, 0.0);
         sun_.mu = muValue;
@@ -44,6 +46,8 @@ public:
 
         clock_.advance(dt());
         trajectory_.addPoint(controller_.state().position);
+        earthTrajectory_.addPoint(earth_.position);
+        jupiterTrajectory_.addPoint(jupiter_.position);
     }
 
     void reset(const State2 &newState)
@@ -52,6 +56,12 @@ public:
         clock_.reset(0.0);
         trajectory_.clear();
         trajectory_.addPoint(newState.position);
+
+        earthTrajectory_.clear();
+        jupiterTrajectory_.clear();
+
+        earthTrajectory_.addPoint(earth_.position);
+        jupiterTrajectory_.addPoint(jupiter_.position);
 
         jupiterAngle_ = 0.0;
         jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
@@ -95,9 +105,20 @@ public:
         return jupiter_.position;
     }
 
+    
+    const std::vector<Vector2>& jupiterTrajectory() const
+    {
+        return jupiterTrajectory_.points();
+    }
+
     const Vector2& earthPosition() const
     {
         return earth_.position;
+    }
+
+    const std::vector<Vector2>& earthTrajectory() const
+    {
+        return earthTrajectory_.points();
     }
 
     double dt() const
@@ -133,10 +154,12 @@ private:
     double jupiterAngle_ = 0.0;
     double jupiterOrbitRadius_ = 12000.0;
     double jupiterAngularSpeed_ = 0.00005;
+    TrajectoryBuffer jupiterTrajectory_;
 
     Body earth_;
 
     double earthAngle_ = 0.0;
     double earthOrbitRadius_ = 8000.0;
     double earthAngularSpeed_ = 0.00020;
+    TrajectoryBuffer earthTrajectory_;
 };
