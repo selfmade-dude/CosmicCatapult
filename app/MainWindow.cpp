@@ -45,13 +45,65 @@ MainWindow::MainWindow(QWidget *parent)
     speedComboBox_->addItem(tr("Very fast"), static_cast<int>(SimulationSpeed::VeryFast));
     speedComboBox_->setCurrentIndex(2);
 
+    x0Spin_ = new QDoubleSpinBox(this);
+    x0Spin_->setRange(-1e9, 1e9);
+    x0Spin_->setDecimals(2);
+    x0Spin_->setValue(7000.0);
+
+    y0Spin_ = new QDoubleSpinBox(this);
+    y0Spin_->setRange(-1e9, 1e9);
+    y0Spin_->setDecimals(2);
+    y0Spin_->setValue(0.0);
+
+    v0Spin_ = new QDoubleSpinBox(this);
+    v0Spin_->setRange(0.0, 1e6);
+    v0Spin_->setDecimals(4);
+    v0Spin_->setValue(7.5);
+
+    fi0Spin_ = new QDoubleSpinBox(this);
+    fi0Spin_->setRange(-360.0, 360.0);
+    fi0Spin_->setDecimals(2);
+    fi0Spin_->setValue(90.0);
+
+    dtSpin_ = new QDoubleSpinBox(this);
+    dtSpin_->setRange(1e-6, 1000.0);
+    dtSpin_->setDecimals(6);
+    dtSpin_->setValue(0.1);
+
+    clearTrailsCheck_ = new QCheckBox(tr("Clear trails on init"), this);
+    clearTrailsCheck_->setChecked(true);
+
+    initButton_ = new QPushButton(tr("Initialize"), this);
+
     orbitView_ = new OrbitViewWidget(central);
     orbitView_->setMinimumHeight(400);
 
+    //Layout
     layout->addWidget(m_stateLabel);
+
     layout->addWidget(new QLabel(tr("Speed:"), this));
     layout->addWidget(speedComboBox_);
+
+    layout->addWidget(new QLabel(tr("x0"), this));
+    layout->addWidget(x0Spin_);
+
+    layout->addWidget(new QLabel(tr("y0"), this));
+    layout->addWidget(y0Spin_);
+
+    layout->addWidget(new QLabel(tr("V0"), this));
+    layout->addWidget(v0Spin_);
+
+    layout->addWidget(new QLabel(tr("Fi0 (deg)"), this));
+    layout->addWidget(fi0Spin_);
+
+    layout->addWidget(new QLabel(tr("dt (advanced)"), this));
+    layout->addWidget(dtSpin_);
+
+    layout->addWidget(clearTrailsCheck_);
+    layout->addWidget(initButton_);
+
     layout->addWidget(orbitView_);
+
     layout->addWidget(m_pauseButton);
 
     setCentralWidget(central);
@@ -81,11 +133,10 @@ MainWindow::MainWindow(QWidget *parent)
     m_timer = new QTimer(this);
     m_timer->setInterval(50);
 
+    //Connecting widgets
     connect(m_timer, &QTimer::timeout, this, &MainWindow::onSimulationTick);
 
     m_timer->start();
-
-    connect(m_pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseClicked);
 
     connect(speedComboBox_, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
         [this](int index)
@@ -93,6 +144,31 @@ MainWindow::MainWindow(QWidget *parent)
             const int value = speedComboBox_->itemData(index).toInt();
             simulationSpeed_ = static_cast<SimulationSpeed>(value);
         });
+
+    connect(initButton_, &QPushButton::clicked, 
+            this,
+            [this]()
+            {
+                ScenarioParams params;
+
+                params.shipPosition = Vector2(x0Spin_->value(), y0Spin_->value());
+
+                const double v0 = v0Spin_->value();
+                const double fi0Deg = fi0Spin_->value();
+                const double fi0Rad = math::deg2rad(fi0Deg);
+
+                params.shipVelocity = Vector2(v0 * std::cos(fi0Rad), v0 * std::sin(fi0Rad));
+
+                params.dt = dtSpin_->value();
+                params.clearTrajectoriesOnReset = clearTrailsCheck_->isChecked();
+
+                if (appModel_)
+                {
+                    appModel_->reset(params);
+                }
+            });
+
+    connect(m_pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseClicked);
 }
 
 MainWindow::~MainWindow()

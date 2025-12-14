@@ -7,6 +7,7 @@
 #include "TrajectoryBuffer.h"
 #include "ScenarioParams.h"
 #include "../core/Body.h"
+#include "../core/MathUtils.h"
 
 class SimulationModel
 {
