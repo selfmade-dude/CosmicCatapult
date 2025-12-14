@@ -5,6 +5,7 @@
 #include "SimulationController.h"
 #include "SimulationClock.h"
 #include "TrajectoryBuffer.h"
+#include "ScenarioParams.h"
 #include "../core/Body.h"
 
 class SimulationModel
@@ -69,6 +70,17 @@ public:
 
         earthTrajectory_.addPoint(earth_.position);
         jupiterTrajectory_.addPoint(jupiter_.position);
+    }
+
+    void reset(const ScenarioParams &params)
+    {
+        State2 shipState;
+        shipState.position = params.shipPosition;
+        shipState.velocity = params.shipVelocity;
+
+        controller_.setDt(params.dt);
+
+        reset(shipState);
     }
 
     const State2& state() const
