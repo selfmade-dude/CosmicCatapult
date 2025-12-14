@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../sim/SimulationModel.h"
+#include "../sim/ScenarioParams.h"
 
 class AppModel
 {
@@ -17,6 +18,11 @@ public:
     void reset(const State2 &newState)
     {
         sim_.reset(newState);
+    }
+
+    void reset(const ScenarioParams &params)
+    {
+        sim_.reset(params);
     }
 
     void setDt(double newDt)
