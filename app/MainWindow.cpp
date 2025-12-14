@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include <QString>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QScrollArea>
 #include <QWidget>
 
 int MainWindow::stepsPerTickForSpeed(MainWindow::SimulationSpeed speed) const
@@ -29,13 +31,13 @@ MainWindow::MainWindow(QWidget *parent)
     resize(800, 600);
 
     QWidget *central = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(central);
+    setCentralWidget(central);
 
-    m_stateLabel = new QLabel(central);
+    m_stateLabel = new QLabel(this);
     m_stateLabel->setWordWrap(true);
     m_stateLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-    m_pauseButton = new QPushButton(tr("Pause"), central);
+    m_pauseButton = new QPushButton(tr("Pause"), this);
 
     speedComboBox_ = new QComboBox(this);
     speedComboBox_->addItem(tr("Very slow"), static_cast<int>(SimulationSpeed::VerySlow));
@@ -75,38 +77,65 @@ MainWindow::MainWindow(QWidget *parent)
 
     initButton_ = new QPushButton(tr("Initialize"), this);
 
-    orbitView_ = new OrbitViewWidget(central);
+    orbitView_ = new OrbitViewWidget(this);
     orbitView_->setMinimumHeight(400);
+    orbitView_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     //Layout
-    layout->addWidget(m_stateLabel);
 
-    layout->addWidget(new QLabel(tr("Speed:"), this));
-    layout->addWidget(speedComboBox_);
+    //Left
+    QWidget *leftPanel = new QWidget(central);
+    QVBoxLayout *leftLayout = new QVBoxLayout(leftPanel);
 
-    layout->addWidget(new QLabel(tr("x0"), this));
-    layout->addWidget(x0Spin_);
+    leftLayout->addWidget(m_stateLabel);
 
-    layout->addWidget(new QLabel(tr("y0"), this));
-    layout->addWidget(y0Spin_);
+    leftLayout->addWidget(orbitView_, /*stretch*/ 1);
 
-    layout->addWidget(new QLabel(tr("V0"), this));
-    layout->addWidget(v0Spin_);
+    leftLayout->setContentsMargins(0, 0, 0, 0);
 
-    layout->addWidget(new QLabel(tr("Fi0 (deg)"), this));
-    layout->addWidget(fi0Spin_);
+    //Right
+    QWidget *rightPanel = new QWidget(central);
+    QVBoxLayout *rightLayout = new QVBoxLayout(rightPanel);
+    rightLayout->setContentsMargins(0, 0, 0, 0);
+    rightLayout->setSpacing(8);
 
-    layout->addWidget(new QLabel(tr("dt (advanced)"), this));
-    layout->addWidget(dtSpin_);
+    rightLayout->addWidget(new QLabel(tr("Speed:"), this));
+    rightLayout->addWidget(speedComboBox_);
 
-    layout->addWidget(clearTrailsCheck_);
-    layout->addWidget(initButton_);
+    rightLayout->addWidget(new QLabel(tr("x0"), this));
+    rightLayout->addWidget(x0Spin_);
 
-    layout->addWidget(orbitView_);
+    rightLayout->addWidget(new QLabel(tr("y0"), this));
+    rightLayout->addWidget(y0Spin_);
 
-    layout->addWidget(m_pauseButton);
+    rightLayout->addWidget(new QLabel(tr("V0"), this));
+    rightLayout->addWidget(v0Spin_);
 
-    setCentralWidget(central);
+    rightLayout->addWidget(new QLabel(tr("Fi0 (deg)"), this));
+    rightLayout->addWidget(fi0Spin_);
+
+    rightLayout->addWidget(new QLabel(tr("dt (advanced)"), this));
+    rightLayout->addWidget(dtSpin_);
+
+    rightLayout->addWidget(clearTrailsCheck_);
+    rightLayout->addWidget(initButton_);
+
+    rightLayout->addWidget(m_pauseButton);
+
+    rightLayout->addStretch(1);
+
+    QScrollArea *rightScroll = new QScrollArea(central);
+    rightScroll->setWidgetResizable(true);
+    rightScroll->setWidget(rightPanel);
+    rightScroll->setFixedWidth(320);
+    rightScroll->setMinimumWidth(320);
+    rightScroll->setMaximumWidth(380);
+
+    QHBoxLayout *rootLayout = new QHBoxLayout();
+    rootLayout->addWidget(leftPanel, 3);
+    rootLayout->addWidget(rightScroll, 1);
+    rootLayout->setContentsMargins(4, 4, 4, 4);
+    central->setLayout(rootLayout);
 
     State2 initialState;
 
