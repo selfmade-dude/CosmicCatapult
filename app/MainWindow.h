@@ -52,7 +52,7 @@ private:
 
     SimulationSpeed simulationSpeed_ = SimulationSpeed::Normal;
 
-    int stepsPerTickForSpeed(SimulationSpeed speed) const;
+    double timeScaleForSpeed(SimulationSpeed speed) const;
 
     bool isPaused_ = false;
 };

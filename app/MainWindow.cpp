@@ -5,22 +5,22 @@
 #include <QScrollArea>
 #include <QWidget>
 
-int MainWindow::stepsPerTickForSpeed(MainWindow::SimulationSpeed speed) const
+double MainWindow::timeScaleForSpeed(MainWindow::SimulationSpeed speed) const
 {
     switch (speed)
     {
     case MainWindow::SimulationSpeed::VerySlow:
-        return 1;
+        return 3600.0;
     case MainWindow::SimulationSpeed::Slow:
-        return 2;
+        return 86400.0;
     case MainWindow::SimulationSpeed::Normal:
-        return 5;
+        return 604800.0;
     case MainWindow::SimulationSpeed::Fast:
-        return 15;
+        return 3024000.0;
     case MainWindow::SimulationSpeed::VeryFast:
-        return 100;
+        return 6048000.0;
     default:
-        return 5;
+        return 604800.0;
     }
 }
 
@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     x0Spin_ = new QDoubleSpinBox(this);
     x0Spin_->setRange(-1e9, 1e9);
     x0Spin_->setDecimals(2);
-    x0Spin_->setValue(7000.0);
+    x0Spin_->setValue(150000000.0);
 
     y0Spin_ = new QDoubleSpinBox(this);
     y0Spin_->setRange(-1e9, 1e9);
@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     v0Spin_ = new QDoubleSpinBox(this);
     v0Spin_->setRange(0.0, 1e6);
     v0Spin_->setDecimals(4);
-    v0Spin_->setValue(7.5);
+    v0Spin_->setValue(40);
 
     fi0Spin_ = new QDoubleSpinBox(this);
     fi0Spin_->setRange(-360.0, 360.0);
@@ -139,10 +139,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     State2 initialState;
 
-    initialState.position = Vector2(7000.0, 0.0);
-    initialState.velocity = Vector2(0.0, 7.5);
+    initialState.position = Vector2(150000000.0, 0.0);
+    initialState.velocity = Vector2(0.0, 40);
 
-    double mu = 398600.4418;
+    constexpr double MU_SUN = 1.32712440018e11;
+    double mu = MU_SUN;
     double dt = 0.1;
 
     appModel_ = new AppModel(initialState, mu, dt);
@@ -160,7 +161,7 @@ MainWindow::MainWindow(QWidget *parent)
     );
 
     m_timer = new QTimer(this);
-    m_timer->setInterval(100);
+    m_timer->setInterval(20);
 
     //Connecting widgets
     connect(m_timer, &QTimer::timeout, this, &MainWindow::onSimulationTick);
@@ -168,11 +169,17 @@ MainWindow::MainWindow(QWidget *parent)
     m_timer->start();
 
     connect(speedComboBox_, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
-        [this](int index)
+    [this](int index)
+    {
+        const int value = speedComboBox_->itemData(index).toInt();
+        simulationSpeed_ = static_cast<SimulationSpeed>(value);
+
+        if (appModel_)
         {
-            const int value = speedComboBox_->itemData(index).toInt();
-            simulationSpeed_ = static_cast<SimulationSpeed>(value);
-        });
+            const double ts = timeScaleForSpeed(simulationSpeed_);
+            appModel_->setTimeScale(ts);
+        }
+    });
 
     connect(initButton_, &QPushButton::clicked, 
             this,
@@ -214,23 +221,7 @@ void MainWindow::onSimulationTick()
 
     if (!isPaused_)
     {
-        int steps = stepsPerTickForSpeed(simulationSpeed_);
-
-        if (steps < 1)
-        {
-            steps = 1;
-        }
-
-        const int maxSteps = 500;
-        if (steps > maxSteps)
-        {
-            steps = maxSteps;
-        }
-
-        for (int i = 0; i < steps; ++i)
-        {
-            appModel_->update();
-        }
+        appModel_->update();
     }
 
     const State2 &st = appModel_->state();

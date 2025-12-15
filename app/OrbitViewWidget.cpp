@@ -75,7 +75,7 @@ void OrbitViewWidget::autoFitSolarSystem()
         return;
     }
 
-    viewR *= 1.15;
+    viewR *= 2;
 
     setWorldBounds(sun.x - viewR, sun.x + viewR, sun.y - viewR, sun.y + viewR);
 }
