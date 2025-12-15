@@ -9,6 +9,9 @@
 #include "../core/Body.h"
 #include "../core/MathUtils.h"
 
+constexpr double AU_KM = 149597870.7;
+constexpr double MU_SUN = 1.32712440018e11;
+
 class SimulationModel
 {
 public:
@@ -17,12 +20,14 @@ public:
         trajectory_.addPoint(initialState.position);
 
         sun_.position = Vector2(0.0, 0.0);
-        sun_.mu = muValue;
+        sun_.mu = MU_SUN;
 
-        jupiter_.mu = muValue * 0.001;
+        jupiter_.mu = 1.26686534e8;
         jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
+        jupiterAngularSpeed_ = std::sqrt(sun_.mu / (jupiterOrbitRadius_ * jupiterOrbitRadius_ * jupiterOrbitRadius_));
 
         earth_.position = Vector2(earthOrbitRadius_, 0.0);
+        earthAngularSpeed_ = std::sqrt(sun_.mu / (earthOrbitRadius_ * earthOrbitRadius_ * earthOrbitRadius_));
 
         earthTrajectory_.addPoint(earth_.position);
         jupiterTrajectory_.addPoint(jupiter_.position);
@@ -168,14 +173,14 @@ private:
     Body jupiter_;
 
     double jupiterAngle_ = 0.0;
-    double jupiterOrbitRadius_ = 12000.0;
-    double jupiterAngularSpeed_ = 0.00005;
+    double jupiterOrbitRadius_ = 5.204* AU_KM;
+    double jupiterAngularSpeed_ = 0.0;
     TrajectoryBuffer jupiterTrajectory_;
 
     Body earth_;
 
     double earthAngle_ = 0.0;
-    double earthOrbitRadius_ = 8000.0;
-    double earthAngularSpeed_ = 0.00020;
+    double earthOrbitRadius_ = 1.0 * AU_KM;
+    double earthAngularSpeed_ = 0.0;
     TrajectoryBuffer earthTrajectory_;
 };
