@@ -15,6 +15,7 @@ public:
     void setAppModel(AppModel *model);
     void setWorldBounds(double minX, double maxX, double minY, double maxY);
     void autoFitBounds(const std::vector<Vector2> &trajectory);
+    void autoFitSolarSystem();
 
 
 protected:

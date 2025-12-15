@@ -11,6 +11,8 @@ OrbitViewWidget::OrbitViewWidget(QWidget *parent) : QWidget(parent), appModel_(n
 void OrbitViewWidget::setAppModel(AppModel *model)
 {
     appModel_ = model;
+    autoFitSolarSystem();
+    update();
 }
 
 void OrbitViewWidget::setWorldBounds(double minX, double maxX, double minY, double maxY)
@@ -50,9 +52,38 @@ void OrbitViewWidget::autoFitBounds(const std::vector<Vector2> &trajectory)
     setWorldBounds(minX, maxX, minY, maxY);
 }
 
+void OrbitViewWidget::autoFitSolarSystem()
+{
+    if (!appModel_)
+    {
+        return;
+    }
+
+    const Vector2 sun = appModel_->sunPosition();
+    const Vector2 earth = appModel_->earthPosition();
+    const Vector2 jupiter = appModel_->jupiterPosition();
+
+    const double rEarth = std::sqrt(earth.x * earth.x + earth.y * earth.y);
+    const double rJupiter = std::sqrt(jupiter.x * jupiter.x + jupiter.y * jupiter.y);
+
+    double viewR = (rEarth > rJupiter) ? rEarth : rJupiter;
+
+    const std::vector<Vector2> &traj = appModel_->trajectory();
+    if (viewR <= 0.0 && !traj.empty())
+    {
+        autoFitBounds(traj);
+        return;
+    }
+
+    viewR *= 1.15;
+
+    setWorldBounds(sun.x - viewR, sun.x + viewR, sun.y - viewR, sun.y + viewR);
+}
+
 void OrbitViewWidget::resizeEvent(QResizeEvent *event)
 {
     converter_.setScreenSize(width(), height());
+    autoFitSolarSystem();
     QWidget::resizeEvent(event);
 }
 
@@ -109,7 +140,7 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
                 first = true;
                 continue;
             }
-            
+
             const ScreenPoint sp = converter_.toScreen(p);
             const QPointF pt(sp.x, sp.y);
 
