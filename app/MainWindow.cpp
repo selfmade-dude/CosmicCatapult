@@ -18,7 +18,7 @@ int MainWindow::stepsPerTickForSpeed(MainWindow::SimulationSpeed speed) const
     case MainWindow::SimulationSpeed::Fast:
         return 15;
     case MainWindow::SimulationSpeed::VeryFast:
-        return 50;
+        return 100;
     default:
         return 5;
     }
@@ -160,7 +160,7 @@ MainWindow::MainWindow(QWidget *parent)
     );
 
     m_timer = new QTimer(this);
-    m_timer->setInterval(50);
+    m_timer->setInterval(100);
 
     //Connecting widgets
     connect(m_timer, &QTimer::timeout, this, &MainWindow::onSimulationTick);

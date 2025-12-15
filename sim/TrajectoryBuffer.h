@@ -6,7 +6,7 @@
 class TrajectoryBuffer
 {
 public:
-    explicit TrajectoryBuffer(std::size_t maxSize = 5000) : maxSize_(maxSize)
+    explicit TrajectoryBuffer(std::size_t maxSize = 1000000) : maxSize_(maxSize)
     {
     }
 
