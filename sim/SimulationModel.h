@@ -76,6 +76,12 @@ public:
             earthTrajectory_.clear();
             jupiterTrajectory_.clear();
         }
+        else 
+        {
+            trajectory_.addBreak();
+            earthTrajectory_.addBreak();
+            jupiterTrajectory_.addBreak();
+        }
 
         trajectory_.addPoint(shipState.position);
         earthTrajectory_.addPoint(earth_.position);
