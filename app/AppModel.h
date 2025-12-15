@@ -15,11 +15,6 @@ public:
         sim_.update();
     }
 
-    void reset(const State2 &newState)
-    {
-        sim_.reset(newState);
-    }
-
     void reset(const ScenarioParams &params)
     {
         sim_.reset(params);

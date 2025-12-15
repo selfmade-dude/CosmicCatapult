@@ -53,26 +53,6 @@ public:
         jupiterTrajectory_.addPoint(jupiter_.position);
     }
 
-    void reset(const State2 &newState)
-    {
-        controller_.reset(newState);
-        clock_.reset(0.0);
-        trajectory_.clear();
-        trajectory_.addPoint(newState.position);
-
-        earthTrajectory_.clear();
-        jupiterTrajectory_.clear();
-
-        jupiterAngle_ = 0.0;
-        jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
-
-        earthAngle_ = 0.0;
-        earth_.position = Vector2(earthOrbitRadius_, 0.0);
-
-        earthTrajectory_.addPoint(earth_.position);
-        jupiterTrajectory_.addPoint(jupiter_.position);
-    }
-
     void reset(const ScenarioParams &params)
     {
         State2 shipState;
@@ -81,7 +61,25 @@ public:
 
         controller_.setDt(params.dt);
 
-        reset(shipState);
+        controller_.reset(shipState);
+        clock_.reset(0.0);
+
+        jupiterAngle_ = 0.0;
+        jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
+
+        earthAngle_ = 0.0;
+        earth_.position = Vector2(earthOrbitRadius_, 0.0);
+
+        if (params.clearTrajectoriesOnReset)
+        {
+            trajectory_.clear();
+            earthTrajectory_.clear();
+            jupiterTrajectory_.clear();
+        }
+
+        trajectory_.addPoint(shipState.position);
+        earthTrajectory_.addPoint(earth_.position);
+        jupiterTrajectory_.addPoint(jupiter_.position);
     }
 
     const State2& state() const
