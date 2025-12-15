@@ -35,24 +35,30 @@ public:
 
     void update()
     {
-        jupiterAngle_ += jupiterAngularSpeed_ * dt();
+        const double dtEff = dt() * timeScale_;
+
+        jupiterAngle_ += jupiterAngularSpeed_ * dtEff;
 
         jupiter_.position.x = jupiterOrbitRadius_ * std::cos(jupiterAngle_);
         jupiter_.position.y = jupiterOrbitRadius_ * std::sin(jupiterAngle_);
 
-        earthAngle_ += earthAngularSpeed_ * dt();
+        earthAngle_ += earthAngularSpeed_ * dtEff;
 
         earth_.position.x = earthOrbitRadius_ * std::cos(earthAngle_);
         earth_.position.y = earthOrbitRadius_ * std::sin(earthAngle_);
 
+
+        const double originalDt = controller_.dt();
+        controller_.setDt(dtEff);
         controller_.stepWithAcceleration([this](const Vector2 &pos)
         {
             const Vector2 aSun = gravitaionalAccelerationFromBody(pos, sun_);
             const Vector2 aJupiter = gravitaionalAccelerationFromBody(pos, jupiter_);
             return aSun + aJupiter;
         });
+        controller_.setDt(originalDt);
 
-        clock_.advance(dt());
+        clock_.advance(dtEff);
         trajectory_.addPoint(controller_.state().position);
         earthTrajectory_.addPoint(earth_.position);
         jupiterTrajectory_.addPoint(jupiter_.position);
@@ -164,10 +170,26 @@ public:
         controller_.setIntegrator(type);
     }
 
+    double timeScale() const
+    {
+        return timeScale_;
+    }
+
+    void setTimeScale(double newTimeScale)
+    {
+        if (newTimeScale <= 0.0)
+        {
+            return;
+        }
+
+        timeScale_ = newTimeScale;
+    }
+
 private:
     SimulationController controller_;
     SimulationClock clock_;
     TrajectoryBuffer trajectory_;
+    double timeScale_ = 360000.0;
 
     Body sun_;
     Body jupiter_;

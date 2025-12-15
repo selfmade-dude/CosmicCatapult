@@ -35,6 +35,16 @@ public:
         sim_.setIntegrator(type);
     }
 
+    double timeScale() const
+    {
+        return sim_.timeScale();
+    }
+
+    void setTimeScale(double newTimeScale)
+    {
+        sim_.setTimeScale(newTimeScale);
+    }
+
     const State2& state() const
     {
         return sim_.state();
