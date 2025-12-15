@@ -222,7 +222,7 @@ void MainWindow::onSimulationTick()
         }
 
         const int maxSteps = 500;
-        if (maxSteps > maxSteps)
+        if (steps > maxSteps)
         {
             steps = maxSteps;
         }
