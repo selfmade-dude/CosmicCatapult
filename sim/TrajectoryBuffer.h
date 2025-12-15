@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <limits>
+#include <cmath>
 #include "../core/Vector2.h"
 
 class TrajectoryBuffer
@@ -23,6 +25,18 @@ public:
     void clear()
     {
         points_.clear();
+    }
+
+    void addBreak()
+    {
+        const double nanValue = std::numeric_limits<double>::quiet_NaN();
+        const Vector2 breakPoint(nanValue, nanValue);
+        addPoint(breakPoint);
+    }
+
+    static bool isBreakPoint(const Vector2 &p)
+    {
+        return std::isnan(p.x) || std::isnan(p.y);
     }
 
     const std::vector<Vector2>& points() const
