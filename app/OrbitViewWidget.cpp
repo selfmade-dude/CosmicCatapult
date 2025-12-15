@@ -104,6 +104,12 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
 
         for (const Vector2 &p : jupiterTraj)
         {
+            if (TrajectoryBuffer::isBreakPoint(p))
+            {
+                first = true;
+                continue;
+            }
+            
             const ScreenPoint sp = converter_.toScreen(p);
             const QPointF pt(sp.x, sp.y);
 
@@ -137,6 +143,12 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
 
         for (const Vector2 &p : earthTraj)
         {
+            if (TrajectoryBuffer::isBreakPoint(p))
+            {
+                first = true;
+                continue;
+            }
+
             const ScreenPoint sp = converter_.toScreen(p);
             const QPointF pt(sp.x, sp.y);
 
@@ -166,6 +178,12 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
 
     for (const Vector2 &p : traj)
     {
+        if (TrajectoryBuffer::isBreakPoint(p))
+        {
+            first = true;
+            continue;
+        }
+
         ScreenPoint sp = converter_.toScreen(p);
         QPointF screenPt(sp.x, sp.y);
 
