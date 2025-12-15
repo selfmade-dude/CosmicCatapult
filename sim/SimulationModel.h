@@ -12,7 +12,7 @@
 class SimulationModel
 {
 public:
-    SimulationModel(const State2 &initialState, double muValue, double dtValue, IntegratorType integratorType = IntegratorType::RK4, std::size_t trajectoryMaxSize = 5000) : controller_(initialState, muValue, dtValue, integratorType), clock_(0.0), trajectory_(trajectoryMaxSize), controllerDt_(dtValue)
+    SimulationModel(const State2 &initialState, double muValue, double dtValue, IntegratorType integratorType = IntegratorType::RK4, std::size_t trajectoryMaxSize = 5000) : controller_(initialState, muValue, dtValue, integratorType), clock_(0.0), trajectory_(trajectoryMaxSize)
     {
         trajectory_.addPoint(initialState.position);
 
@@ -137,13 +137,12 @@ public:
 
     double dt() const
     {
-        return controllerDt_;
+        return controller_.dt();
     }
 
     void setDt(double newDt)
     {
         controller_.setDt(newDt);
-        controllerDt_ = newDt;
     }
 
     void setMu(double newMu)
@@ -160,7 +159,6 @@ private:
     SimulationController controller_;
     SimulationClock clock_;
     TrajectoryBuffer trajectory_;
-    double controllerDt_ = 0.0;
 
     Body sun_;
     Body jupiter_;

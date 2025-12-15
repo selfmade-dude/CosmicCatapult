@@ -60,6 +60,11 @@ public:
         dt_ = newDt;
     }
 
+    double dt() const
+    {
+        return dt_;
+    }
+
     void setMu(double newMu)
     {
         mu_ = newMu;
