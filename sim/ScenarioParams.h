@@ -11,6 +11,6 @@ struct ScenarioParams
 
     bool clearTrajectoriesOnReset = true;
 
-    bool autoAllignPlanetForAssist = false;
+    bool autoAlignPlanetForAssist = false;
     int assistPlanetIndex = 0;
 };
