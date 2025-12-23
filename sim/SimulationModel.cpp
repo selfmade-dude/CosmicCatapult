@@ -38,7 +38,12 @@ static double wrapAngleRadians(double a)
 
 static double polarAngle(const Vector2& p)
 {
-    return std::atan2(p.y, p.y);
+    return std::atan2(p.y, p.x);
+}
+
+static Vector2 positionOnCircle(double radius, double angleRad)
+{
+    return Vector2(radius * std::cos(angleRad), radius * std::sin(angleRad));
 }
 
 void SimulationModel::update()
@@ -83,6 +88,9 @@ void SimulationModel::reset(const ScenarioParams &params)
     controller_.reset(shipState);
     clock_.reset(0.0);
 
+    jupiterAngle_ = 0.0;
+    earthAngle_ = 0.0;
+
     if (params.autoAlignPlanetForAssist)
     {
         const double pi = 3.14159265358979323846;
@@ -94,12 +102,12 @@ void SimulationModel::reset(const ScenarioParams &params)
             State2 probe = shipState;
 
             double t = 0.0;
-            const double dtPred = params.dt * 360000;
+            const double dtPred = params.dt * 1000;
 
             const double rTarget = *planet.orbitRadius;
             const double tol = 0.01 * rTarget;
 
-            const double maxPredictTime = 60.0 * 60.0 * 24.0 * 300.0;
+            const double maxPredictTime = 60.0 * 60.0 * 24.0 * 365.0 * 5.0;
 
             bool found = false;
             double thetaShip = 0.0;
@@ -130,18 +138,15 @@ void SimulationModel::reset(const ScenarioParams &params)
             {
                 const double omega = *planet.angularSpeed;
                 
-                const double biasRad = 10.0 * (pi / 180.0);
+                const double biasRad = 1.0 * (pi / 180.0);
 
                 *planet.angle = wrapAngleRadians(thetaShip - omega * tHit + biasRad);
             }
         }
     }
 
-    jupiterAngle_ = 0.0;
-    jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
-
-    earthAngle_ = 0.0;
-    earth_.position = Vector2(earthOrbitRadius_, 0.0);
+    jupiter_.position = positionOnCircle(jupiterOrbitRadius_, jupiterAngle_);
+    earth_.position = positionOnCircle(earthOrbitRadius_, earthAngle_);
 
     if (params.clearTrajectoriesOnReset)
     {
