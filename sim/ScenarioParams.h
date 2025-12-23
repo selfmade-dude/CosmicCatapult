@@ -10,4 +10,7 @@ struct ScenarioParams
     double dt = 0.1;
 
     bool clearTrajectoriesOnReset = true;
+
+    bool autoAllignPlanetForAssist = false;
+    int assistPlanetIndex = 0;
 };
