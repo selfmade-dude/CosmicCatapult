@@ -39,6 +39,8 @@ private:
     QDoubleSpinBox *dtSpin_ = nullptr;
 
     QCheckBox *clearTrailsCheck_ = nullptr;
+    QCheckBox *autoAlignPlanetCheck_ = nullptr;
+
     QPushButton *initButton_ = nullptr;
 
     enum class SimulationSpeed

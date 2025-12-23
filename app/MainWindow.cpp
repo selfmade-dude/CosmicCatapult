@@ -75,6 +75,9 @@ MainWindow::MainWindow(QWidget *parent)
     clearTrailsCheck_ = new QCheckBox(tr("Clear trails on init"), this);
     clearTrailsCheck_->setChecked(true);
 
+    autoAlignPlanetCheck_ = new QCheckBox(tr("Auto-align planet (assist)"), this);
+    autoAlignPlanetCheck_->setChecked(false);
+
     initButton_ = new QPushButton(tr("Initialize"), this);
 
     orbitView_ = new OrbitViewWidget(this);
@@ -118,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent)
     rightLayout->addWidget(dtSpin_);
 
     rightLayout->addWidget(clearTrailsCheck_);
+    rightLayout->addWidget(autoAlignPlanetCheck_);
     rightLayout->addWidget(initButton_);
 
     rightLayout->addWidget(m_pauseButton);
@@ -197,6 +201,8 @@ MainWindow::MainWindow(QWidget *parent)
 
                 params.dt = dtSpin_->value();
                 params.clearTrajectoriesOnReset = clearTrailsCheck_->isChecked();
+                params.autoAlignPlanetForAssist = autoAlignPlanetCheck_->isChecked();
+                params.assistPlanetIndex = 0;
 
                 if (appModel_)
                 {

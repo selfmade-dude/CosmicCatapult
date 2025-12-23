@@ -21,4 +21,5 @@ target_link_libraries(cosmic_catapult_app
         Qt${QT_VERSION_MAJOR}::Gui
         Qt${QT_VERSION_MAJOR}::Widgets
         cosmic_core
+        cosmic_sim
 )
