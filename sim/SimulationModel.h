@@ -205,4 +205,32 @@ private:
     double earthOrbitRadius_ = 1.0 * AU_KM;
     double earthAngularSpeed_ = 0.0;
     TrajectoryBuffer earthTrajectory_;
+
+    struct AssistPlanetRefs
+    {
+        Body* body = nullptr;
+        double* angle = nullptr;
+        double* orbitRadius = nullptr;
+        double* andgularSpeed = nullptr;
+    };
+
+    AssistPlanetRefs assistPlanetRefsForIndex(int index)
+    {
+        if (index == 1)
+        {
+            AssistPlanetRefs refs;
+            refs.body = &earth_;
+            refs.angle = &earthAngle_;
+            refs.orbitRadius = &earthOrbitRadius_;
+            refs.andgularSpeed = &earthAngularSpeed_;
+            return refs;
+        }
+
+        AssistPlanetRefs refs;
+        refs.body = &jupiter_;
+        refs.angle = &jupiterAngle_;
+        refs.orbitRadius = &jupiterOrbitRadius_;
+        refs.andgularSpeed = &jupiterAngularSpeed_;
+        return refs;
+    }
 };
