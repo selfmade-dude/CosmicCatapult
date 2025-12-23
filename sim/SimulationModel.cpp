@@ -27,6 +27,20 @@ SimulationModel::SimulationModel(const State2 &initialState,
     jupiterTrajectory_.addPoint(jupiter_.position);
 }
 
+static double wrapAngleRadians(double a)
+{
+    const double pi = 3.14159265358979323846;
+    const double twoPi = 2.0 * pi;
+    while (a > pi) { a -= twoPi; }
+    while (a < pi) { a += twoPi; }
+    return a;
+}
+
+static double polarAngle(const Vector2& p)
+{
+    return std::atan2(p.y, p.y);
+}
+
 void SimulationModel::update()
 {
     const double dtEff = dt() * timeScale_;
@@ -68,6 +82,60 @@ void SimulationModel::reset(const ScenarioParams &params)
 
     controller_.reset(shipState);
     clock_.reset(0.0);
+
+    if (params.autoAlignPlanetForAssist)
+    {
+        const double pi = 3.14159265358979323846;
+
+        AssistPlanetRefs planet = assistPlanetRefsForIndex(params.assistPlanetIndex);
+
+        if (planet.body != nullptr && planet.angle != nullptr && planet.orbitRadius != nullptr && planet.angularSpeed != nullptr)
+        {
+            State2 probe = shipState;
+
+            double t = 0.0;
+            const double dtPred = params.dt * 360000;
+
+            const double rTarget = *planet.orbitRadius;
+            const double tol = 0.01 * rTarget;
+
+            const double maxPredictTime = 60.0 * 60.0 * 24.0 * 300.0;
+
+            bool found = false;
+            double thetaShip = 0.0;
+            double tHit = 0.0;
+
+            while (t < maxPredictTime)
+            {
+                probe = stepRK4(
+                    probe, dtPred, [this](const Vector2& pos)
+                    {
+                        return gravitaionalAccelerationFromBody(pos, sun_);
+                    }
+                );
+
+                t += dtPred;
+
+                const double r = std::sqrt(probe.position.x * probe.position.x + probe.position.y * probe.position.y);
+                if (std::abs(r - rTarget) < tol)
+                {
+                    thetaShip = polarAngle(probe.position);
+                    tHit = t;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found)
+            {
+                const double omega = *planet.angularSpeed;
+                
+                const double biasRad = 10.0 * (pi / 180.0);
+
+                *planet.angle = wrapAngleRadians(thetaShip - omega * tHit + biasRad);
+            }
+        }
+    }
 
     jupiterAngle_ = 0.0;
     jupiter_.position = Vector2(jupiterOrbitRadius_, 0.0);
