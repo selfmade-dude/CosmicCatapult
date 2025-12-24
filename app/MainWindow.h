@@ -25,7 +25,6 @@ private slots:
     void onPauseClicked();
 
 private:
-    QLabel *m_stateLabel = nullptr;
     QPushButton *m_pauseButton = nullptr;
     AppModel *appModel_ = nullptr;
     QTimer *m_timer = nullptr;

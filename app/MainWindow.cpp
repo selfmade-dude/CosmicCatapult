@@ -33,10 +33,6 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget *central = new QWidget(this);
     setCentralWidget(central);
 
-    m_stateLabel = new QLabel(this);
-    m_stateLabel->setWordWrap(true);
-    m_stateLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-
     m_pauseButton = new QPushButton(tr("Pause"), this);
 
     speedComboBox_ = new QComboBox(this);
@@ -89,8 +85,6 @@ MainWindow::MainWindow(QWidget *parent)
     //Left
     QWidget *leftPanel = new QWidget(central);
     QVBoxLayout *leftLayout = new QVBoxLayout(leftPanel);
-
-    leftLayout->addWidget(m_stateLabel);
 
     leftLayout->addWidget(orbitView_, /*stretch*/ 1);
 
@@ -155,14 +149,6 @@ MainWindow::MainWindow(QWidget *parent)
     orbitView_->setWorldBounds(-15000.0, 15000.0, -15000.0, 15000.0);
 
     const State2 &st = appModel_->state();
-    
-    m_stateLabel->setText(
-        QString("Initial position: (%1, %2)\nVelocityi: (%3, %4)")
-            .arg(st.position.x)
-            .arg(st.position.y)
-            .arg(st.velocity.x)
-            .arg(st.velocity.y)
-    );
 
     m_timer = new QTimer(this);
     m_timer->setInterval(20);
@@ -220,7 +206,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::onSimulationTick()
 {
-    if (!appModel_ || !m_stateLabel)
+    if (!appModel_)
     {
         return;
     }
@@ -232,17 +218,6 @@ void MainWindow::onSimulationTick()
 
     const State2 &st = appModel_->state();
     double t = appModel_->time();
-
-    m_stateLabel->setText(
-        QString("t = %1 s\n"
-                "position: (%2, %3)\n"
-                "velocity: (%4, %5)")
-            .arg(t, 0, 'f',2)
-            .arg(st.position.x, 0, 'f', 2)
-            .arg(st.position.y, 0, 'f', 2)
-            .arg(st.velocity.x, 0, 'f', 4)
-            .arg(st.velocity.y, 0, 'f', 4)
-    );
 
     orbitView_->update();
 }
@@ -263,13 +238,5 @@ void MainWindow::onPauseClicked()
     else
     {
         m_pauseButton->setText(tr("Pause"));
-    }
-}
-
-void MainWindow::setOrbitText(const QString &text)
-{
-    if (m_stateLabel)
-    {
-        m_stateLabel->setText(text);
     }
 }
