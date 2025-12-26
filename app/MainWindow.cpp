@@ -3,8 +3,10 @@
 #include <QString>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGroupBox>
 #include <QScrollArea>
 #include <QWidget>
+#include <QFont>
 
 double MainWindow::timeScaleForSpeed(MainWindow::SimulationSpeed speed) const
 {
@@ -83,11 +85,26 @@ MainWindow::MainWindow(QWidget *parent)
     speedLabel_ = new QLabel(tr("Speed: 0.00 km/s"), this);
     speedLabel_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
+    QFont infoFont;
+    infoFont.setPointSize(11); 
+    infoFont.setBold(true);
+
+    timeLabel_->setFont(infoFont);
+    speedLabel_->setFont(infoFont);
+
+
     orbitView_ = new OrbitViewWidget(this);
     orbitView_->setMinimumHeight(400);
     orbitView_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     //Layout
+
+    //Status
+    QGroupBox *statusBox = new QGroupBox(tr("Status"), this);
+    QVBoxLayout *statusLayout = new QVBoxLayout(statusBox);
+
+    statusLayout->addWidget(timeLabel_);
+    statusLayout->addWidget(speedLabel_);
 
     //Left
     QWidget *leftPanel = new QWidget(central);
@@ -127,8 +144,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     rightLayout->addWidget(m_pauseButton);
 
-    rightLayout->addWidget(timeLabel_);
-    rightLayout->addWidget(speedLabel_);
+    rightLayout->addWidget(statusBox);
 
     rightLayout->addStretch(1);
 
