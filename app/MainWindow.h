@@ -37,6 +37,9 @@ private:
     QDoubleSpinBox *fi0Spin_ = nullptr;
     QDoubleSpinBox *dtSpin_ = nullptr;
 
+    QLabel *timeLabel_ = nullptr;
+    QLabel *speedLabel_ = nullptr;
+
     QCheckBox *clearTrailsCheck_ = nullptr;
     QCheckBox *autoAlignPlanetCheck_ = nullptr;
 

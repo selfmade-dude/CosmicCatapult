@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include <cmath>
 #include <QString>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -76,6 +77,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     initButton_ = new QPushButton(tr("Initialize"), this);
 
+    timeLabel_ = new QLabel(tr("Time: 0.00 yr"), this);
+    timeLabel_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    speedLabel_ = new QLabel(tr("Speed: 0.00 km/s"), this);
+    speedLabel_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
     orbitView_ = new OrbitViewWidget(this);
     orbitView_->setMinimumHeight(400);
     orbitView_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -120,6 +127,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     rightLayout->addWidget(m_pauseButton);
 
+    rightLayout->addWidget(timeLabel_);
+    rightLayout->addWidget(speedLabel_);
+
     rightLayout->addStretch(1);
 
     QScrollArea *rightScroll = new QScrollArea(central);
@@ -147,8 +157,6 @@ MainWindow::MainWindow(QWidget *parent)
     appModel_ = new AppModel(initialState, mu, dt);
     orbitView_->setAppModel(appModel_);
     orbitView_->setWorldBounds(-15000.0, 15000.0, -15000.0, 15000.0);
-
-    const State2 &st = appModel_->state();
 
     m_timer = new QTimer(this);
     m_timer->setInterval(20);
@@ -216,10 +224,21 @@ void MainWindow::onSimulationTick()
         appModel_->update();
     }
 
-    const State2 &st = appModel_->state();
-    double t = appModel_->time();
-
     orbitView_->update();
+
+    if (timeLabel_ && speedLabel_ && appModel_)
+    {
+        const double secondsPerYear = 365.0 * 24.0 * 3600.0;
+
+        const double tSeconds = appModel_->time();
+        const double tYears = tSeconds / secondsPerYear;
+
+        const State2 &st = appModel_->state();
+        const double v = std::sqrt(st.velocity.x * st.velocity.x + st.velocity.y * st.velocity.y);
+
+        timeLabel_->setText(tr("Time: %1 yr").arg(tYears, 0, 'f', 2));
+        speedLabel_->setText(tr("Speed: %2 km/s").arg(v, 0, 'f', 2));
+    }
 }
 
 void MainWindow::onPauseClicked()
