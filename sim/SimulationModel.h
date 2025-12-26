@@ -55,7 +55,7 @@ private:
     SimulationController controller_;
     SimulationClock clock_;
     TrajectoryBuffer trajectory_;
-    double timeScale_ = 360000.0;
+    double timeScale_ = 3153600.0;
 
     Body sun_;
     Body jupiter_;

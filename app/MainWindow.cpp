@@ -13,15 +13,15 @@ double MainWindow::timeScaleForSpeed(MainWindow::SimulationSpeed speed) const
     switch (speed)
     {
     case MainWindow::SimulationSpeed::VerySlow:
-        return 3600.0;
-    case MainWindow::SimulationSpeed::Slow:
         return 86400.0;
-    case MainWindow::SimulationSpeed::Normal:
+    case MainWindow::SimulationSpeed::Slow:
         return 604800.0;
+    case MainWindow::SimulationSpeed::Normal:
+        return 3153600.0;
     case MainWindow::SimulationSpeed::Fast:
-        return 3024000.0;
+        return 6307200.0;
     case MainWindow::SimulationSpeed::VeryFast:
-        return 6048000.0;
+        return 18921600.0;
     default:
         return 604800.0;
     }
