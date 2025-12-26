@@ -109,7 +109,7 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
     painter.drawLine(QPointF(originScreen.x, 0.0), QPointF(originScreen.x, height()));
 
     const double AU_KM = 149597870.7;
-    const double tickStep = 0.5 * AU_KM;
+    const double tickStep = 1 * AU_KM;
     const int tickHalfPx = 3;
 
     for (double x = tickStep; ; x += tickStep)
