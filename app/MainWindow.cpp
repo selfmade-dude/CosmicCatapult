@@ -85,13 +85,19 @@ MainWindow::MainWindow(QWidget *parent)
     speedLabel_ = new QLabel(tr("Speed: 0.00 km/s"), this);
     speedLabel_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
+    positionPolarLabel_ = new QLabel(tr("Position: 0.00 AU, \u03C6 = 0.00\u00B0"), this);
+    positionPolarLabel_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    timeScaleLabel_ = new QLabel(tr("Time scale: 0.00 yr/s"), this);
+    timeScaleLabel_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
     QFont infoFont;
     infoFont.setPointSize(11); 
     infoFont.setBold(true);
 
     timeLabel_->setFont(infoFont);
     speedLabel_->setFont(infoFont);
-
+    positionPolarLabel_->setFont(infoFont);
 
     orbitView_ = new OrbitViewWidget(this);
     orbitView_->setMinimumHeight(400);
@@ -105,6 +111,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     statusLayout->addWidget(timeLabel_);
     statusLayout->addWidget(speedLabel_);
+    statusLayout->addWidget(positionPolarLabel_);
+    statusLayout->addWidget(timeScaleLabel_);
 
     //Left
     QWidget *leftPanel = new QWidget(central);
@@ -263,6 +271,31 @@ void MainWindow::onSimulationTick()
 
         timeLabel_->setText(tr("Time: %1 yr").arg(tYears, 0, 'f', 2));
         speedLabel_->setText(tr("Speed: %2 km/s").arg(v, 0, 'f', 2));
+
+        const double AU_KM = 149597870.7;
+
+        const double xKm = st.position.x;
+        const double yKm = st.position.y;
+
+        const double rKm = std::sqrt(xKm * xKm + yKm * yKm);
+        const double rAu = rKm / AU_KM;
+
+        const double phiRad = std::atan2(yKm, xKm);
+        const double phiDeg = math::rad2deg(phiRad);
+
+        const double timeScaleSecondsPerSecond = appModel_->timeScale(); 
+        const double dt = appModel_->dt();
+        const double timeScaleYearsPerSecond = 50 * dt * timeScaleSecondsPerSecond / secondsPerYear; 
+
+        positionPolarLabel_->setText(
+            tr("Position: r = %1 AU, \u03C6 = %2\u00B0")
+                .arg(rAu, 0, 'f', 3)
+                .arg(phiDeg, 0, 'f', 2)
+        );
+
+        timeScaleLabel_->setText(
+            tr("Time scale: %1 yr/s").arg(timeScaleYearsPerSecond, 0, 'f', 3)
+        );
     }
 }
 

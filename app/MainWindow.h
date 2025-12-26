@@ -39,6 +39,8 @@ private:
 
     QLabel *timeLabel_ = nullptr;
     QLabel *speedLabel_ = nullptr;
+    QLabel *positionPolarLabel_ = nullptr;
+    QLabel *timeScaleLabel_ = nullptr;
 
     QCheckBox *clearTrailsCheck_ = nullptr;
     QCheckBox *autoAlignPlanetCheck_ = nullptr;

@@ -55,6 +55,11 @@ public:
         return sim_.time();
     }
 
+    double dt() const
+    {
+        return sim_.dt();
+    }
+
     const std::vector<Vector2>& trajectory() const
     {
         return sim_.trajectory();
