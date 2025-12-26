@@ -86,10 +86,6 @@ void OrbitViewWidget::resizeEvent(QResizeEvent *event)
     converter_.setScreenSize(width(), height());
     autoFitSolarSystem();
     QWidget::resizeEvent(event);
-    //converter_.setWorldBounds(converter_.worldMinX(),
-    //                          converter_.worldMaxX(),
-    //                          converter_.worldMinY(),
-    //                          converter_.worldMaxY());
 }
 
 void OrbitViewWidget::paintEvent(QPaintEvent *event)
@@ -116,41 +112,50 @@ void OrbitViewWidget::paintEvent(QPaintEvent *event)
     const double tickStep = 0.5 * AU_KM;
     const int tickHalfPx = 3;
 
-    const double minX = converter_.worldMinX();
-    const double maxX = converter_.worldMaxX();
-    const double minY = converter_.worldMinY();
-    const double maxY = converter_.worldMaxY();
-
-    const int startNX = static_cast<int>(std::ceil(minX / tickStep));
-    const int endNX = static_cast<int>(std::floor(maxX / tickStep));
-
-    for (int n = startNX; n <= endNX; n++)
+    for (double x = tickStep; ; x += tickStep)
     {
-        const double x = static_cast<double>(n) * tickStep;
-
-        if (std::abs(x) < 1e-9)
+        const ScreenPoint p = converter_.toScreen(Vector2(x, 0.0));
+        if (p.x < 0.0 || p.x > static_cast<double>(width()))
         {
-            continue;
+            break;
         }
 
-        const ScreenPoint p = converter_.toScreen(Vector2(x, 0.0));
         painter.drawLine(QPointF(p.x, originScreen.y - tickHalfPx),
                          QPointF(p.x, originScreen.y + tickHalfPx));
     }
 
-    const int startNY = static_cast<int>(std::ceil(minY / tickStep));
-    const int endNY   = static_cast<int>(std::floor(maxY / tickStep));
-
-    for (int n = startNY; n <= endNY; ++n)
+    for (double x = -tickStep; ; x -= tickStep)
     {
-        const double y = static_cast<double>(n) * tickStep;
-
-        if (std::abs(y) < 1e-9)
+        const ScreenPoint p = converter_.toScreen(Vector2(x, 0.0));
+        if (p.x < 0.0 || p.x > static_cast<double>(width()))
         {
-            continue;
+            break;
         }
 
+        painter.drawLine(QPointF(p.x, originScreen.y - tickHalfPx),
+                         QPointF(p.x, originScreen.y + tickHalfPx));
+    }
+
+    for (double y = tickStep; ; y += tickStep)
+    {
         const ScreenPoint p = converter_.toScreen(Vector2(0.0, y));
+        if (p.y < 0.0 || p.y > static_cast<double>(height()))
+        {
+            break;
+        }
+
+        painter.drawLine(QPointF(originScreen.x - tickHalfPx, p.y),
+                         QPointF(originScreen.x + tickHalfPx, p.y));
+    }
+
+    for (double y = -tickStep; ; y -= tickStep)
+    {
+        const ScreenPoint p = converter_.toScreen(Vector2(0.0, y));
+        if (p.y < 0.0 || p.y > static_cast<double>(height()))
+        {
+            break;
+        }
+
         painter.drawLine(QPointF(originScreen.x - tickHalfPx, p.y),
                          QPointF(originScreen.x + tickHalfPx, p.y));
     }

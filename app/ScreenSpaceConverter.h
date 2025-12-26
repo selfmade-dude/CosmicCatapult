@@ -76,11 +76,6 @@ public:
         return result;
     }
 
-    double worldMinX() const { return worldMinX_; }
-    double worldMaxX() const { return worldMaxX_; }
-    double worldMinY() const { return worldMinY_; }
-    double worldMaxY() const { return worldMaxY_; }
-
 private:
     double worldMinX_;
     double worldMaxX_;
