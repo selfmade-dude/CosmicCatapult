@@ -47,12 +47,12 @@ MainWindow::MainWindow(QWidget *parent)
     speedComboBox_->setCurrentIndex(2);
 
     x0Spin_ = new QDoubleSpinBox(this);
-    x0Spin_->setRange(-1e9, 1e9);
-    x0Spin_->setDecimals(2);
-    x0Spin_->setValue(150000000.0);
+    x0Spin_->setRange(0.01, 10.0);  
+    x0Spin_->setDecimals(4);
+    x0Spin_->setValue(1.0000);    
 
     y0Spin_ = new QDoubleSpinBox(this);
-    y0Spin_->setRange(-1e9, 1e9);
+    y0Spin_->setRange(-180.0, 180.0);
     y0Spin_->setDecimals(2);
     y0Spin_->setValue(0.0);
 
@@ -123,10 +123,10 @@ MainWindow::MainWindow(QWidget *parent)
     rightLayout->addWidget(new QLabel(tr("Speed:"), this));
     rightLayout->addWidget(speedComboBox_);
 
-    rightLayout->addWidget(new QLabel(tr("x0"), this));
+    rightLayout->addWidget(new QLabel(tr("r0 (AU)"), this));
     rightLayout->addWidget(x0Spin_);
 
-    rightLayout->addWidget(new QLabel(tr("y0"), this));
+    rightLayout->addWidget(new QLabel(tr("Phi0 (deg)"), this));
     rightLayout->addWidget(y0Spin_);
 
     rightLayout->addWidget(new QLabel(tr("V0"), this));
@@ -163,7 +163,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     State2 initialState;
 
-    initialState.position = Vector2(150000000.0, 0.0);
+    initialState.position = Vector2(149597870.7, 0.0);
     initialState.velocity = Vector2(0.0, 40);
 
     constexpr double MU_SUN = 1.32712440018e11;
@@ -201,7 +201,16 @@ MainWindow::MainWindow(QWidget *parent)
             {
                 ScenarioParams params;
 
-                params.shipPosition = Vector2(x0Spin_->value(), y0Spin_->value());
+                const double AU_KM = 149597870.7;
+
+                const double rAU = x0Spin_->value();
+                const double phiDeg = y0Spin_->value();
+                const double phiRad = math::deg2rad(phiDeg);
+
+                const double rKm = rAU * AU_KM;
+
+                params.shipPosition = Vector2(rKm * std::cos(phiRad),
+                                              rKm * std::sin(phiRad));
 
                 const double v0 = v0Spin_->value();
                 const double fi0Deg = fi0Spin_->value();
